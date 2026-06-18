@@ -1,0 +1,98 @@
+<ion-content>
+
+  <header class="header-inscripcion">
+    <button class="btn-volver" type="button" (click)="volverDetalle()">←</button>
+    <h1>Inscripción al Taller</h1>
+  </header>
+
+  <main class="contenedor-inscripcion" *ngIf="taller">
+
+    <ng-container *ngIf="taller.imagenUrl; else imagenPorClase">
+      <section
+        class="card-imagen"
+        [style.background-image]="'url(' + taller.imagenUrl + ')'">
+        <div class="overlay-imagen">
+          <span class="etiqueta">{{ taller.etiqueta || 'Taller comunitario' }}</span>
+          <h2>{{ taller.nombre }}</h2>
+        </div>
+      </section>
+    </ng-container>
+
+    <ng-template #imagenPorClase>
+      <section class="card-imagen" [ngClass]="obtenerImagenClase()">
+        <div class="overlay-imagen">
+          <span class="etiqueta">{{ taller.etiqueta || 'Taller comunitario' }}</span>
+          <h2>{{ taller.nombre }}</h2>
+        </div>
+      </section>
+    </ng-template>
+
+    <section class="card-formulario">
+
+      <p class="intro">
+        Completa tus datos para reservar tu lugar en esta experiencia de crecimiento comunitario.
+      </p>
+
+      <form>
+
+        <div class="campo">
+          <label>Nombre Completo</label>
+
+          <div class="input-con-icono">
+            <span>👤</span>
+            <input
+              type="text"
+              [(ngModel)]="nombreCompleto"
+              name="nombreCompleto"
+              placeholder="Ejemplo: Juan Pérez">
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>RUT</label>
+
+          <div class="input-con-icono">
+            <span>🪪</span>
+            <input
+              type="text"
+              [(ngModel)]="rut"
+              name="rut"
+              placeholder="Ejemplo: 20.409.209-1">
+          </div>
+
+          <small>Incluye puntos y guion.</small>
+        </div>
+
+        <div class="campo">
+          <label>Número de Teléfono</label>
+
+          <div class="input-con-icono">
+            <span>📞</span>
+            <input
+              type="tel"
+              [(ngModel)]="telefono"
+              name="telefono"
+              placeholder="Ejemplo: +56 9 53274097">
+          </div>
+        </div>
+
+        <ion-button
+          expand="block"
+          color="success"
+          type="button"
+          (click)="confirmarInscripcion()"
+          [disabled]="enviando">
+          {{ enviando ? 'Confirmando...' : 'Confirmar Inscripción ✅' }}
+        </ion-button>
+
+      </form>
+
+      <p class="nota">
+        Al confirmar, recibirás un mensaje de confirmación con los detalles del taller.
+      </p>
+
+    </section>
+
+  </main>
+
+</ion-content>

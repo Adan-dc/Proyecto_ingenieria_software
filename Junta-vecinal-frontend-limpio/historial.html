@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historial | Junta Vecinal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div>
+        <div class="logo"><div class="logo-icon"><i class="fa-solid fa-house-user"></i></div><div><h2>Junta Vecinal</h2><p>Administración</p></div></div>
+        <nav class="nav"><a href="./dashboard.html" class=""><i class="fa-solid fa-chart-line"></i>Panel</a>
+<a href="./vecinos.html" class=""><i class="fa-solid fa-users"></i>Vecinos</a>
+<a href="./subadmins.html" class=""><i class="fa-solid fa-user-shield"></i>Sub-Admins</a>
+<a href="./historial.html" class="active"><i class="fa-solid fa-clock-rotate-left"></i>Historial</a>
+<a href="./config.html" class=""><i class="fa-solid fa-gear"></i>Configuración</a></nav>
+      </div>
+      <button class="logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
+    </aside>
+    <main class="main">
+      
+<header class="header"><div><h1>Historial</h1><p>Vista general de usuarios y estados de cuenta.</p></div><button class="btn btn-secondary" onclick="cargarHistorial()"><i class="fa-solid fa-rotate-right"></i> Actualizar</button></header>
+<section class="card"><div class="card-header"><h2>Historial de cuentas</h2><button class="btn btn-secondary btn-sm" onclick="exportTableToCSV('historial-table','historial.csv')">Exportar CSV</button></div><div class="table-wrap"><table><thead><tr><th>Usuario</th><th>Tipo</th><th>Contacto/Dirección</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="historial-table"><tr><td colspan="5" class="empty">Cargando historial...</td></tr></tbody></table></div></section>
+<div class="modal-overlay" id="acciones-modal-overlay"><div class="modal"><div class="modal-header"><h3>Acciones de usuario</h3><button class="modal-close" onclick="closeModal('acciones-modal-overlay')">×</button></div><div class="modal-body"><p id="ac-nombre" style="font-weight:900;margin-bottom:16px;"></p><div class="actions"><button class="btn btn-success" onclick="accActivar()">Activar</button><button class="btn btn-secondary" onclick="accBloquear()">Bloquear</button><button class="btn btn-danger" onclick="accEliminar()">Eliminar</button></div></div></div></div>
+
+    </main>
+  </div>
+  <div class="toast" id="toast"><span class="toast-icon">✓</span><span id="toast-msg">Acción realizada</span></div>
+  <script src="./app.js"></script>
+<script src="./historial.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', validarSesion);</script>
+</body>
+</html>

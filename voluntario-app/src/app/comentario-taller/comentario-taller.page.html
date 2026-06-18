@@ -1,0 +1,96 @@
+<ion-content>
+
+  <main class="comentario-page">
+
+    <header class="header-comentario">
+      <button type="button" class="btn-volver" (click)="volver()">
+        ←
+      </button>
+
+      <div>
+        <h1>Comentario del taller</h1>
+        <p>Comparte tu experiencia al finalizar el taller.</p>
+      </div>
+    </header>
+
+    <section class="card-taller" *ngIf="taller">
+
+      <div class="etiqueta">
+        {{ taller.etiqueta || 'Taller comunitario' }}
+      </div>
+
+      <h2>{{ obtenerNombreTaller() }}</h2>
+
+      <p class="descripcion">
+        {{ taller.descripcion || 'Sin descripción disponible.' }}
+      </p>
+
+      <div class="datos">
+        <p>
+          📅 {{ formatearFecha(taller.fecha) }}
+        </p>
+
+        <p>
+          📍 {{ taller.lugar || taller.ubicacion || taller.direccion || 'Lugar por confirmar' }}
+        </p>
+      </div>
+
+    </section>
+
+    <section class="card-comentario">
+
+      <h2>Tu comentario</h2>
+
+      <p class="ayuda" *ngIf="!comentarioExistente">
+        Puedes escribir un comentario sobre tu experiencia en este taller.
+      </p>
+
+      <p class="ayuda" *ngIf="comentarioExistente">
+        Ya enviaste un comentario para este taller.
+      </p>
+
+      <label for="comentario">
+        Comentario
+      </label>
+
+      <textarea
+        id="comentario"
+        [(ngModel)]="comentario"
+        rows="7"
+        [disabled]="comentarioExistente || cargandoComentario || guardando"
+        placeholder="Escribe aquí tu experiencia en el taller...">
+      </textarea>
+
+      <p *ngIf="comentarioExistente" class="mensaje-comentario-existente">
+        Ya enviaste un comentario para este taller. Solo se permite un comentario por taller.
+      </p>
+
+      <button
+        type="button"
+        class="btn-guardar"
+        (click)="guardarComentario()"
+        [disabled]="comentarioExistente || guardando || cargandoComentario">
+
+        <span *ngIf="cargandoComentario">
+          Cargando comentario...
+        </span>
+
+        <span *ngIf="!cargandoComentario && guardando">
+          Guardando...
+        </span>
+
+        <span *ngIf="!cargandoComentario && !guardando && !comentarioExistente">
+          Guardar comentario
+        </span>
+
+        <span *ngIf="!cargandoComentario && !guardando && comentarioExistente">
+          Comentario ya enviado
+        </span>
+
+      </button>
+
+    </section>
+
+  </main>
+
+</ion-content>

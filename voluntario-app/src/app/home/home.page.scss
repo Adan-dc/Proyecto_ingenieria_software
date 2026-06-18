@@ -1,0 +1,321 @@
+ion-content {
+  --background: #f1f5f9;
+}
+
+.inicio {
+  width: 92%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 28px 0 35px;
+}
+
+/* HEADER SALUDO + MI CUENTA */
+
+.saludo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.saludo {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.saludo h1 {
+  color: #0f172a;
+  font-size: 30px;
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+
+.saludo p {
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.btn-mi-cuenta-home {
+  width: auto;
+  min-width: 126px;
+  height: 44px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  background: #ffffff;
+  color: #166534;
+
+  border-radius: 14px;
+  padding: 0 16px;
+
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.btn-mi-cuenta-home span {
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.icono-cuenta {
+  font-size: 17px;
+}
+
+/* TÍTULO SECCIÓN */
+
+.titulo-seccion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.titulo-seccion h2 {
+  color: #0f172a;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.titulo-seccion button {
+  background: transparent;
+  border: none;
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* LISTA TALLERES */
+
+.lista-talleres {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.card-taller {
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+  border: 1px solid #e2e8f0;
+}
+
+.imagen-taller {
+  height: 170px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.imagen-taller.kinesiologia {
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.15), rgba(37, 99, 235, 0.15)),
+    url("https://images.unsplash.com/photo-1571019613914-85f342c6a11e?auto=format&fit=crop&w=900&q=80");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.imagen-taller.manualidades {
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.15), rgba(37, 99, 235, 0.15)),
+    url("https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=900&q=80");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.imagen-taller.yoga {
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.15), rgba(37, 99, 235, 0.15)),
+    url("https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=80");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.imagen-taller-img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  display: block;
+  background: #e2e8f0;
+}
+
+.contenido-card {
+  padding: 18px;
+}
+
+.etiqueta {
+  display: inline-block;
+  background: #2563eb;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.contenido-card h3 {
+  color: #0f172a;
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+
+.contenido-card p {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+.datos-taller {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.datos-taller span {
+  color: #334155;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* CUPOS */
+
+.cupos-texto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  color: #0f172a;
+  font-size: 13px;
+}
+
+.cupos-texto strong {
+  color: #166534;
+  font-weight: 900;
+}
+
+.barra {
+  width: 100%;
+  height: 8px;
+  background: #dbeafe;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.progreso {
+  height: 100%;
+  background: #22c55e;
+  border-radius: 999px;
+}
+
+/* BOTÓN IONIC */
+
+ion-button {
+  --background: #166534;
+  --background-hover: #14532d;
+  --background-activated: #14532d;
+  --color: white;
+  --border-radius: 10px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: none;
+}
+
+/* MENSAJES */
+
+.cargando,
+.mensaje-info {
+  background: #ffffff;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+.card-vacia {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+.card-vacia h3 {
+  color: #0f172a;
+  margin: 0 0 8px;
+}
+
+.card-vacia p {
+  color: #64748b;
+  margin: 0;
+}
+
+/* RESPONSIVE */
+
+@media (min-width: 900px) {
+  .inicio {
+    max-width: 1100px;
+  }
+
+  .lista-talleres {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .imagen-taller {
+    height: 190px;
+  }
+}
+
+@media (max-width: 520px) {
+  .saludo-header {
+    flex-direction: column;
+  }
+
+  .btn-mi-cuenta-home {
+    width: 100%;
+  }
+
+  .saludo h1 {
+    font-size: 26px;
+  }
+
+  .btn-mis-talleres {
+    width: 100%;
+    margin-top: 24px;
+    padding: 15px;
+    border: 0;
+    border-radius: 14px;
+    background: #166534;
+    color: #fff;
+    font-weight: 900;
+  }
+}

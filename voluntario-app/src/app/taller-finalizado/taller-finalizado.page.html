@@ -1,0 +1,38 @@
+<ion-content>
+
+  <main class="contenedor-finalizado">
+
+    <section class="card-finalizado">
+
+      <div class="icono-finalizado">
+        ✓
+      </div>
+
+      <h1>¡Taller Finalizado!</h1>
+
+      <p>
+        Gracias por tu participación y compromiso. 
+        Tu tiempo dedicado al voluntariado hace una gran diferencia en la comunidad.
+      </p>
+
+      <div class="info-taller">
+        <span>📚</span>
+        <div>
+          <h3>{{ nombreTaller }}</h3>
+          <p>Este taller ya ha finalizado.</p>
+        </div>
+      </div>
+
+      <ion-button expand="block" color="success" (click)="escribirComentario()">
+        Escribir un comentario
+      </ion-button>
+
+      <button class="btn-cerrar" type="button" (click)="cerrarMensaje()">
+        Cerrar
+      </button>
+
+    </section>
+
+  </main>
+
+</ion-content>

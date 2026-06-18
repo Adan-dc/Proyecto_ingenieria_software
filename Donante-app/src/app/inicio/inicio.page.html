@@ -1,0 +1,41 @@
+<ion-content>
+
+  <main class="inicio-wrapper">
+
+    <section class="login-card card">
+
+      <div class="login-icon">
+        <span class="material-symbols-outlined">volunteer_activism</span>
+      </div>
+
+      <h1>¡Hola de nuevo!</h1>
+
+      <p>
+        Inicia sesión con tu RUT para continuar conectando con tu comunidad.
+      </p>
+
+      <div class="input-group">
+        <label>RUT</label>
+        <div class="input-box">
+          <span class="material-symbols-outlined">badge</span>
+          <input
+            type="text"
+            placeholder="Ej: 12345678-9"
+            [(ngModel)]="rut"
+          >
+        </div>
+      </div>
+
+      <button class="primary-btn" (click)="iniciarSesion()" [disabled]="cargando">
+        {{ cargando ? 'Ingresando...' : 'Iniciar sesión' }}
+      </button>
+
+      <button class="secondary-btn" (click)="irRegistro()">
+        No tengo cuenta, registrarme
+      </button>
+
+    </section>
+
+  </main>
+
+</ion-content>

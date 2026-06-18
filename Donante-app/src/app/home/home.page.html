@@ -1,0 +1,111 @@
+<ion-content>
+
+  <header class="app-header">
+    <div class="header-inner">
+
+      <button class="icon-button" (click)="cerrarSesion()">
+        <span class="material-symbols-outlined">logout</span>
+      </button>
+
+      <strong>Community Connect</strong>
+
+      <button class="profile-btn" (click)="irSolicitudes()">
+        {{ (vecino?.nombre || vecino?.nombreCompleto || 'V').charAt(0) }}
+      </button>
+
+    </div>
+  </header>
+
+  <main class="page home-page">
+
+    <section class="title-block">
+      <h1>Talleres de Donación</h1>
+      <p>
+        Encuentra el centro más cercano para donar ropa, alimentos, juguetes o materiales.
+      </p>
+    </section>
+
+    <section class="filters">
+      <button class="active">Todos</button>
+    
+      <button class="active" (click)="cargarTalleres()">
+        Actualizar
+      </button>
+    </section>
+
+    <p class="estado-carga" *ngIf="cargando">
+      Cargando talleres...
+    </p>
+
+    <section class="grid-talleres" *ngIf="!cargando">
+
+      <article class="taller-card card" *ngFor="let taller of talleres">
+
+        <div class="img-box">
+          <img [src]="obtenerImagen(taller)" [alt]="obtenerNombre(taller)">
+
+          <span class="badge">
+            <span class="material-symbols-outlined">volunteer_activism</span>
+            {{ obtenerCategoria(taller) }}
+          </span>
+        </div>
+
+        <div class="card-body">
+
+          <h2>{{ obtenerNombre(taller) }}</h2>
+
+          <p>{{ obtenerDescripcion(taller) }}</p>
+
+          <div class="meta">
+            <span class="material-symbols-outlined">location_on</span>
+            {{ obtenerDireccion(taller) }}
+          </div>
+
+          <div class="meta">
+            <span class="material-symbols-outlined">schedule</span>
+            {{ obtenerHorario(taller) }}
+          </div>
+
+          <div class="meta" *ngIf="taller.cupos || taller.maxVoluntarios">
+            <span class="material-symbols-outlined">groups</span>
+            Cupos: {{ taller.cupos || taller.maxVoluntarios }}
+          </div>
+
+          <button class="primary-btn" (click)="seleccionarTaller(taller)">
+            Seleccionar Taller
+          </button>
+
+        </div>
+
+      </article>
+
+      <div class="vacio" *ngIf="talleres.length === 0">
+        <span class="material-symbols-outlined">event_busy</span>
+        <h2>No hay talleres disponibles</h2>
+        <p>Cuando el administrador cree talleres, aparecerán aquí.</p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav">
+
+    <button class="active">
+      <span class="material-symbols-outlined">event</span>
+      Talleres
+    </button>
+
+    <button (click)="irSolicitudes()">
+      <span class="material-symbols-outlined">list_alt</span>
+      Solicitudes
+    </button>
+
+    <button (click)="cerrarSesion()">
+      <span class="material-symbols-outlined">person</span>
+      Salir
+    </button>
+
+  </nav>
+
+</ion-content>

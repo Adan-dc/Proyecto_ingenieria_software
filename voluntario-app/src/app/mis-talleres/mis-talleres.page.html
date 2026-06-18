@@ -1,0 +1,61 @@
+<ion-content>
+
+  <main class="mis-talleres-page">
+
+    <header class="header-mis-talleres">
+      <button type="button" class="btn-volver" (click)="volverHome()">
+        ←
+      </button>
+
+      <div>
+        <h1>Mis talleres inscritos</h1>
+        <p>Revisa tus talleres y comenta cuando hayan finalizado.</p>
+      </div>
+    </header>
+
+    <section *ngIf="cargando" class="mensaje">
+      Cargando talleres...
+    </section>
+
+    <section *ngIf="!cargando && talleres.length === 0" class="card-vacia">
+      <h2>No tienes talleres inscritos</h2>
+      <p>Cuando te inscribas a un taller, aparecerá aquí.</p>
+    </section>
+
+    <article class="card-taller" *ngFor="let taller of talleres">
+
+      <h2>{{ taller.nombre }}</h2>
+
+      <p>
+        {{ taller.descripcion }}
+      </p>
+
+      <p>
+        📅 {{ formatearFecha(taller.fecha) }} |
+        {{ obtenerHorario(taller) }}
+      </p>
+
+      <p>
+        📍 {{ taller.lugar }}
+      </p>
+
+      <div *ngIf="tallerFinalizado(taller)" class="zona-comentario">
+        <p>Este taller ya finalizó.</p>
+
+        <button
+          type="button"
+          class="btn-comentar"
+          (click)="irAComentario(taller)">
+          💬 Comentar / Editar comentario
+        </button>
+      </div>
+
+      <div *ngIf="!tallerFinalizado(taller)" class="zona-pendiente">
+        <p>Podrás comentar cuando el taller finalice.</p>
+      </div>
+
+    </article>
+
+  </main>
+
+</ion-content>

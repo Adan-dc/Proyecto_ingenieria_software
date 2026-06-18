@@ -1,0 +1,209 @@
+ion-content {
+  --background: #f1f5f9;
+}
+
+.header-inscripcion {
+  background: white;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header-inscripcion h1 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.btn-volver {
+  border: none;
+  background: transparent;
+  color: #166534;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.contenedor-inscripcion {
+  width: 92%;
+  max-width: 520px;
+  margin: 22px auto 35px;
+}
+
+.card-imagen {
+  height: 210px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  margin-bottom: 18px;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+}
+
+.overlay-imagen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(15, 23, 42, 0.75),
+    rgba(15, 23, 42, 0.10)
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+.etiqueta {
+  background: #2563eb;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: 999px;
+  width: fit-content;
+  margin-bottom: 8px;
+}
+
+.overlay-imagen h2 {
+  color: white;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.card-formulario {
+  background: white;
+  border-radius: 18px;
+  padding: 26px;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+  border: 1px solid #e2e8f0;
+}
+
+.intro {
+  color: #475569;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 24px;
+}
+
+.campo {
+  margin-bottom: 20px;
+}
+
+.campo label {
+  display: block;
+  color: #1e293b;
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.input-con-icono {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0 12px;
+}
+
+.input-con-icono span {
+  font-size: 18px;
+}
+
+.input-con-icono input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 14px 0;
+  color: #1e293b;
+  font-size: 15px;
+}
+
+.input-con-icono:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.campo small {
+  display: block;
+  color: #64748b;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+ion-button {
+  --background: #166534;
+  --background-hover: #14532d;
+  --background-activated: #14532d;
+  --color: white;
+  --border-radius: 10px;
+  font-weight: 800;
+  margin-top: 20px;
+  text-transform: none;
+}
+
+.nota {
+  color: #94a3b8;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 18px 0 0;
+}
+
+/* Imágenes del taller */
+
+.card-imagen.kinesiologia {
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.10), rgba(37, 99, 235, 0.10)),
+    url("https://images.unsplash.com/photo-1571019613914-85f342c6a11e?auto=format&fit=crop&w=900&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+.card-imagen.manualidades {
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.10), rgba(37, 99, 235, 0.10)),
+    url("https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=900&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+.card-imagen.yoga {
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.10), rgba(37, 99, 235, 0.10)),
+    url("https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+.card-imagen.tejido {
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.10), rgba(37, 99, 235, 0.10)),
+    url("https://images.unsplash.com/photo-1646993045131-7e53706f01d8?auto=format&fit=crop&w=900&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+@media (min-width: 900px) {
+  .contenedor-inscripcion {
+    max-width: 680px;
+  }
+
+  .card-imagen {
+    height: 260px;
+  }
+}
+.imagen-inscripcion {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+}

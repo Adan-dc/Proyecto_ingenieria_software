@@ -1,0 +1,57 @@
+<ion-content>
+
+  <main class="pagina-exito">
+
+    <section class="bloque-superior">
+      <h1>¡Logrado!</h1>
+
+      <div class="circulo-check">
+        <span>✓</span>
+      </div>
+    </section>
+
+    <section class="tarjeta-exito">
+
+      <h2>{{ titulo }}</h2>
+
+      <p class="mensaje">
+        {{ mensaje }}
+      </p>
+
+      <div class="tarjeta-taller" *ngIf="taller">
+
+        <div class="icono-taller">
+          🗓️
+        </div>
+
+        <div class="info-taller">
+          <h3>PRÓXIMO TALLER</h3>
+
+          <p class="nombre-taller">
+            {{ nombreTaller }}
+          </p>
+
+          <p class="detalle-taller">
+            {{ fechaTaller }} | {{ horarioTaller }}
+          </p>
+
+          <p class="detalle-taller">
+            {{ lugarTaller }}
+          </p>
+        </div>
+
+      </div>
+
+      <button class="btn-principal" type="button" (click)="verMisTalleres()">
+        Ver mis talleres
+      </button>
+
+      <button class="btn-secundario" type="button" (click)="volverInicio()">
+        Regresar al inicio
+      </button>
+
+    </section>
+
+  </main>
+
+</ion-content>

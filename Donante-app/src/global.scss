@@ -1,0 +1,233 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import '@ionic/angular/css/palettes/dark.system.css';
+
+
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+:root {
+  --color-bg: #fbf8ff;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f4f2ff;
+  --color-surface-high: #e5e6ff;
+  --color-primary: #0f5238;
+  --color-primary-2: #2d6a4f;
+  --color-secondary: #0e6c4a;
+  --color-secondary-soft: #a0f4c8;
+  --color-text: #161a32;
+  --color-muted: #404943;
+  --color-outline: #bfc9c1;
+  --color-error: #ba1a1a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Atkinson Hyperlegible Next', sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+h1, h2, h3, h4, button, label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+ion-content {
+  --background: var(--color-bg);
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--color-surface);
+  box-shadow: 0 2px 12px rgba(15, 82, 56, 0.08);
+}
+
+.header-inner {
+  height: 64px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.icon-button {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page {
+  min-height: 100%;
+  padding: 24px 20px 110px;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid rgba(191, 201, 193, 0.6);
+  border-radius: 22px;
+  box-shadow: 0 8px 32px rgba(15, 82, 56, 0.08);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--color-muted);
+  margin-left: 4px;
+}
+
+.input-box {
+  position: relative;
+}
+
+.input-box span {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #707973;
+}
+
+.input-box input,
+.input-box select,
+.input-box textarea {
+  width: 100%;
+  border: 1px solid var(--color-outline);
+  background: var(--color-bg);
+  border-radius: 14px;
+  padding: 14px 14px 14px 48px;
+  outline: none;
+  font-size: 16px;
+  color: var(--color-text);
+}
+
+.input-box textarea {
+  min-height: 130px;
+  resize: none;
+  padding-top: 16px;
+}
+
+.input-box input:focus,
+.input-box select:focus,
+.input-box textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(15, 82, 56, 0.14);
+}
+
+.primary-btn {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 15px 18px;
+  background: var(--color-primary);
+  color: white;
+  font-weight: 900;
+  font-size: 15px;
+  box-shadow: 0 4px 14px rgba(15, 82, 56, 0.18);
+}
+
+.secondary-btn {
+  width: 100%;
+  border: 1px solid rgba(15, 82, 56, 0.25);
+  border-radius: 999px;
+  padding: 14px 18px;
+  background: transparent;
+  color: var(--color-primary);
+  font-weight: 900;
+  font-size: 15px;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 78px;
+  background: white;
+  border-top: 1px solid rgba(191, 201, 193, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 80;
+}
+
+.bottom-nav button {
+  border: none;
+  background: transparent;
+  color: var(--color-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.bottom-nav button.active {
+  background: var(--color-secondary-soft);
+  color: var(--color-secondary);
+  border-radius: 999px;
+  padding: 8px 16px;
+}

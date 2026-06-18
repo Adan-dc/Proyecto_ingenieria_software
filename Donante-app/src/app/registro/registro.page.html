@@ -1,0 +1,91 @@
+<ion-content>
+
+  <header class="app-header">
+    <div class="header-inner">
+      <button class="icon-button" (click)="volver()">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+
+      <strong>Registro de Vecino</strong>
+
+      <div style="width:42px"></div>
+    </div>
+  </header>
+
+  <main class="page registro-page">
+
+    <div class="hero">
+      <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80" alt="Vecinos">
+      <div>
+        <h2>¡Bienvenido al barrio!</h2>
+      </div>
+    </div>
+
+    <section class="card form-card">
+
+      <div class="input-group">
+        <label>RUT</label>
+        <div class="input-box">
+          <span class="material-symbols-outlined">badge</span>
+          <input
+            type="text"
+            placeholder="Ej: 12345678-9"
+            [(ngModel)]="rut">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Nombre completo</label>
+        <div class="input-box">
+          <span class="material-symbols-outlined">person</span>
+          <input
+            type="text"
+            placeholder="Ej: Juan Pérez"
+            [(ngModel)]="nombreCompleto">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Correo electrónico</label>
+        <div class="input-box">
+          <span class="material-symbols-outlined">mail</span>
+          <input
+            type="email"
+            placeholder="tu@correo.com"
+            [(ngModel)]="correo">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Teléfono</label>
+        <div class="input-box">
+          <span class="material-symbols-outlined">call</span>
+          <input
+            type="text"
+            placeholder="Ej: 912345678"
+            [(ngModel)]="telefono">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Dirección</label>
+        <div class="input-box">
+          <span class="material-symbols-outlined">home</span>
+          <input
+            type="text"
+            placeholder="Ej: Los Aromos 123"
+            [(ngModel)]="direccion">
+        </div>
+      </div>
+
+      <button class="primary-btn" (click)="registrarVecino()" [disabled]="cargando">
+        {{ cargando ? 'Registrando...' : 'Registrarse' }}
+      </button>
+
+      <p class="nota">Al registrarte, podrás enviar donaciones y revisar tus solicitudes.</p>
+
+    </section>
+
+  </main>
+
+</ion-content>

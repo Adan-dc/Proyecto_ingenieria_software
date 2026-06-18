@@ -1,0 +1,253 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f1f5f9;
+    color: #0f172a;
+  }
+  
+  .encabezado {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    text-align: center;
+    padding: 42px 20px;
+  }
+  
+  .encabezado h1 {
+    margin: 0 0 10px;
+    font-size: 34px;
+  }
+  
+  .encabezado p {
+    margin: 0;
+    color: #dbeafe;
+    font-size: 16px;
+  }
+  
+  .contenedor {
+    width: 92%;
+    max-width: 1100px;
+    margin: 32px auto;
+  }
+  
+  .card {
+    background: white;
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+    border: 1px solid #e2e8f0;
+  }
+  
+  .card h2 {
+    margin: 0 0 22px;
+    color: #0f172a;
+    font-size: 24px;
+  }
+  
+  .grid-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  
+  .campo {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .campo-completo {
+    grid-column: span 2;
+  }
+  
+  label {
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #334155;
+    font-size: 14px;
+  }
+  
+  input,
+  textarea,
+  select {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 13px;
+    font-size: 15px;
+    outline: none;
+    color: #1e293b;
+  }
+  
+  textarea {
+    min-height: 95px;
+    resize: vertical;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+  
+  .btn-secundario {
+    margin-top: 20px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 18px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  
+  .btn-secundario:hover {
+    background: #1d4ed8;
+  }
+  
+  .lista-articulos {
+    margin-top: 22px;
+  }
+  
+  .texto-vacio {
+    color: #64748b;
+    background: #f8fafc;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px dashed #cbd5e1;
+  }
+  
+  .item-articulo {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: center;
+  }
+  
+  .item-articulo h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    color: #0f172a;
+  }
+  
+  .item-articulo p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+  }
+  
+  .btn-eliminar {
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  
+  .acciones {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .btn-principal {
+    width: 100%;
+    max-width: 420px;
+    background: #166534;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  
+  .btn-principal:hover {
+    background: #14532d;
+  }
+  
+  @media (max-width: 768px) {
+    .grid-form {
+      grid-template-columns: 1fr;
+    }
+  
+    .campo-completo {
+      grid-column: span 1;
+    }
+  
+    .encabezado h1 {
+      font-size: 28px;
+    }
+  }
+  .modo-oscuro .bg-white {
+  background: #334155 !important;
+  color: #f8fafc !important;
+  border-color: #475569 !important;
+}
+
+.modo-oscuro p,
+.modo-oscuro h1,
+.modo-oscuro h2,
+.modo-oscuro h3,
+.modo-oscuro h4,
+.modo-oscuro span,
+.modo-oscuro div {
+  color: inherit;
+}
+
+.modo-oscuro .text-text {
+  color: #f8fafc !important;
+}
+
+.modo-oscuro .text-muted {
+  color: #cbd5e1 !important;
+}
+
+.modo-oscuro .comentario-caja {
+  background: #334155 !important;
+  color: #f8fafc !important;
+  border-color: #475569 !important;
+}
+
+.modo-oscuro .bg-white {
+    background: #334155 !important;
+    color: #f8fafc !important;
+    border-color: #475569 !important;
+  }
+  
+  .modo-oscuro p,
+  .modo-oscuro h1,
+  .modo-oscuro h2,
+  .modo-oscuro h3,
+  .modo-oscuro h4,
+  .modo-oscuro span,
+  .modo-oscuro div {
+    color: inherit;
+  }
+  
+  .modo-oscuro .text-text {
+    color: #f8fafc !important;
+  }
+  
+  .modo-oscuro .text-muted {
+    color: #cbd5e1 !important;
+  }
+  
+  .modo-oscuro .comentario-caja {
+    background: #334155 !important;
+    color: #f8fafc !important;
+    border-color: #475569 !important;
+  }

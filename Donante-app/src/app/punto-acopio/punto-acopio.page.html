@@ -1,0 +1,93 @@
+<ion-content>
+
+  <main class="punto-acopio-page">
+
+    <section class="card-acopio">
+
+      <div class="icono-exito">
+        <span class="material-symbols-outlined">check_circle</span>
+      </div>
+
+      <h1>¡Solicitud enviada!</h1>
+
+      <p class="intro">
+        Gracias por tu donación. Ahora puedes llevar los artículos al punto de acopio de la Junta de Vecinos.
+      </p>
+
+      <section class="info-card">
+
+        <div class="info-item">
+          <div class="info-icon">
+            <span class="material-symbols-outlined">location_on</span>
+          </div>
+
+          <div>
+            <h2>Punto de acopio</h2>
+            <p>{{ nombreLugar }}</p>
+            <strong>{{ direccion }}</strong>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon">
+            <span class="material-symbols-outlined">schedule</span>
+          </div>
+
+          <div>
+            <h2>Horario de recepción</h2>
+            <p>Lunes a domingo</p>
+            <strong>{{ horario }}</strong>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="mapa-simulado">
+
+        <div class="pin">
+          <span class="material-symbols-outlined">location_on</span>
+        </div>
+
+        <div>
+          <h3>Pamela 1205</h3>
+          <p>Maipú</p>
+        </div>
+
+      </section>
+
+      <button
+        type="button"
+        class="primary-btn"
+        (click)="abrirGoogleMaps()">
+        <span class="material-symbols-outlined">map</span>
+        Abrir en Google Maps
+      </button>
+
+      <button
+        type="button"
+        class="secondary-btn"
+        (click)="copiarDireccion()">
+        <span class="material-symbols-outlined">content_copy</span>
+        Copiar dirección
+      </button>
+
+      <button
+        type="button"
+        class="secondary-btn"
+        (click)="irSolicitudes()">
+        <span class="material-symbols-outlined">list_alt</span>
+        Ver mis solicitudes
+      </button>
+
+      <button
+        type="button"
+        class="link-btn"
+        (click)="volverInicio()">
+        Volver al inicio
+      </button>
+
+    </section>
+
+  </main>
+
+</ion-content>

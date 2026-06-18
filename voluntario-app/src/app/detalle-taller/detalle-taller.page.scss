@@ -1,0 +1,219 @@
+ion-content {
+  --background: #f1f5f9;
+}
+
+.contenedor-detalle {
+  width: 92%;
+  max-width: 520px;
+  margin: 20px auto 35px;
+}
+
+.card-detalle {
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+  border: 1px solid #e2e8f0;
+}
+
+.imagen-detalle {
+  height: 210px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.btn-cerrar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: white;
+  color: #1e293b;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.20);
+}
+
+.contenido-detalle {
+  padding: 20px;
+}
+
+.etiqueta {
+  display: inline-block;
+  background: #2563eb;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.contenido-detalle h1 {
+  color: #0f172a;
+  font-size: 25px;
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+
+.profesor {
+  color: #334155;
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+
+.descripcion {
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 18px;
+}
+
+.info-card {
+  background: #eef4ff;
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 14px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.icono-info {
+  width: 38px;
+  height: 38px;
+  background: #dbeafe;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.info-card h3 {
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+.info-card p {
+  color: #475569;
+  font-size: 14px;
+  margin: 0 0 4px;
+}
+
+.cupos {
+  margin: 20px 0 22px;
+}
+
+.cupos-texto {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.cupos-texto span {
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cupos-texto strong {
+  color: #166534;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.barra {
+  width: 100%;
+  height: 8px;
+  background: #dbeafe;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progreso {
+  height: 100%;
+  background: #16a34a;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+ion-button {
+  --background: #166534;
+  --background-hover: #14532d;
+  --background-activated: #14532d;
+  --color: white;
+  --border-radius: 10px;
+  font-weight: 800;
+  text-transform: none;
+}
+
+/* Imágenes: usa las mismas fotos o links de tu vista principal */
+
+.imagen-detalle.kinesiologia {
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.10), rgba(37, 99, 235, 0.10)),
+    url("https://images.unsplash.com/photo-1571019613914-85f342c6a11e?auto=format&fit=crop&w=900&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+.imagen-detalle.manualidades {
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.10), rgba(37, 99, 235, 0.10)),
+    url("https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=900&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+.imagen-detalle.yoga {
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.10), rgba(37, 99, 235, 0.10)),
+    url("https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+.imagen-detalle.tejido {
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.10), rgba(37, 99, 235, 0.10)),
+    url("/assets/img/tejido.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+@media (min-width: 900px) {
+  .contenedor-detalle {
+    max-width: 760px;
+  }
+
+  .imagen-detalle {
+    height: 280px;
+  }
+}
+
+.mensaje-cupos {
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+ion-button[disabled] {
+  opacity: 0.6;
+}
+.imagen-detalle-img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+}

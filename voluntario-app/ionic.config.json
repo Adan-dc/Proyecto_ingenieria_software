@@ -1,0 +1,7 @@
+{
+  "name": "voluntario-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

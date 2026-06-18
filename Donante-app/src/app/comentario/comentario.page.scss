@@ -1,0 +1,78 @@
+.comentario-page {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.resumen-card {
+  padding: 24px;
+}
+
+h1 {
+  margin: 0 0 10px;
+  color: var(--color-primary);
+  font-size: 30px;
+  font-weight: 900;
+}
+
+p {
+  margin: 0 0 20px;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.resumen,
+.articulos {
+  background: var(--color-surface-soft);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.resumen strong,
+.articulos strong {
+  display: block;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+
+.resumen span {
+  color: var(--color-text);
+}
+
+/* AQUÍ ESTÁ EL ARREGLO */
+.articulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 10px 0;
+  color: #111827 !important;
+}
+
+/* Para que el nombre del artículo se vea negro */
+.articulo span,
+.articulo p,
+.articulo div {
+  color: #111827 !important;
+}
+
+/* Si el nombre del artículo aparece como texto directo, hereda este color */
+.articulos {
+  color: #111827 !important;
+}
+
+.articulos p,
+.articulos span,
+.articulos div {
+  color: #111827 !important;
+}
+
+.articulo:first-of-type {
+  border-top: none;
+}
+
+/* Dejo la cantidad en verde para que destaque el x1 */
+.articulo b {
+  color: var(--color-primary) !important;
+  font-weight: 900;
+}

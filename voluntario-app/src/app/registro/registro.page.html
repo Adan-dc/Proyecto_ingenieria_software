@@ -1,0 +1,65 @@
+<ion-content>
+
+  <main class="contenedor-registro">
+
+    <section class="card-registro">
+
+      <h1>Crear cuenta</h1>
+
+      <p>
+        Regístrate como voluntario para poder inscribirte en los talleres.
+      </p>
+
+      <div class="campo">
+        <label>Nombre completo</label>
+        <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          placeholder="Ejemplo: Juan Pérez">
+      </div>
+
+      <div class="campo">
+        <label>RUT</label>
+        <input 
+          type="text" 
+          [(ngModel)]="rut" 
+          placeholder="Ejemplo: 20.409.209-1">
+      </div>
+
+      <div class="campo">
+        <label>Teléfono</label>
+        <input 
+          type="tel" 
+          [(ngModel)]="telefono" 
+          placeholder="Ejemplo: +56 9 1234 5678">
+      </div>
+
+      <div class="campo">
+        <label>Correo electrónico</label>
+        <input 
+          type="email" 
+          [(ngModel)]="email" 
+          placeholder="ejemplo@gmail.com">
+      </div>
+
+      <div class="campo">
+        <label>Contraseña</label>
+        <input 
+          type="password" 
+          [(ngModel)]="password" 
+          placeholder="Crea una contraseña">
+      </div>
+
+      <ion-button expand="block" color="success" (click)="registrarVoluntario()">
+        Registrarme
+      </ion-button>
+
+      <button class="btn-login" type="button" (click)="irALogin()">
+        Ya tengo cuenta
+      </button>
+
+    </section>
+
+  </main>
+
+</ion-content>

@@ -1,0 +1,96 @@
+<ion-content>
+
+  <header class="app-header">
+    <div class="header-inner">
+
+      <button class="icon-button" (click)="volver()">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+
+      <strong>Artículos a donar</strong>
+
+      <div style="width:42px"></div>
+
+    </div>
+  </header>
+
+  <main class="page donar-page">
+
+    <section class="title-block">
+      <h1>Tu donación</h1>
+
+      <p>
+        Ajusta las cantidades de los artículos que quieres donar para este taller.
+      </p>
+
+      <strong *ngIf="taller">
+        {{ taller.nombre || taller.titulo || 'Taller seleccionado' }}
+      </strong>
+    </section>
+
+    <p class="estado-carga" *ngIf="cargando">
+      Cargando artículos requeridos...
+    </p>
+
+    <section class="items-list" *ngIf="!cargando && articulos.length > 0">
+
+      <article class="item-card card" *ngFor="let articulo of articulos">
+
+        <div class="item-info">
+
+          <div class="item-icon">
+            <span class="material-symbols-outlined">
+              {{ articulo.icono }}
+            </span>
+          </div>
+
+          <div class="item-text">
+            <h2>{{ articulo.nombre }}</h2>
+            <p>{{ articulo.detalle }}</p>
+          </div>
+
+        </div>
+
+        <div class="quantity">
+
+          <button (click)="restar(articulo)">
+            <span class="material-symbols-outlined">remove</span>
+          </button>
+
+          <strong>{{ articulo.cantidad }}</strong>
+
+          <button (click)="sumar(articulo)">
+            <span class="material-symbols-outlined">add</span>
+          </button>
+
+        </div>
+
+      </article>
+
+    </section>
+
+    <section class="vacio" *ngIf="!cargando && articulos.length === 0">
+      <span class="material-symbols-outlined">inventory_2</span>
+      <h2>No hay artículos requeridos</h2>
+      <p>
+        El administrador aún no ha agregado artículos para este taller.
+      </p>
+    </section>
+
+  </main>
+
+  <section class="bottom-action" *ngIf="!cargando && articulos.length > 0">
+
+    <div>
+      <span>Total artículos</span>
+      <strong>{{ totalArticulos() }}</strong>
+    </div>
+
+    <button (click)="continuar()">
+      <span class="material-symbols-outlined">send</span>
+      Continuar
+    </button>
+
+  </section>
+
+</ion-content>

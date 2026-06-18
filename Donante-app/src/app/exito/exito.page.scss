@@ -1,0 +1,74 @@
+.exito-wrapper {
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .exito-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: rgba(149, 212, 179, 0.24);
+    filter: blur(60px);
+    top: -80px;
+    left: -80px;
+  }
+  
+  .exito-wrapper::after {
+    content: '';
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: rgba(160, 244, 200, 0.22);
+    filter: blur(70px);
+    bottom: -90px;
+    right: -90px;
+  }
+  
+  .success-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 34px 24px;
+    text-align: center;
+    z-index: 2;
+  }
+  
+  .success-icon {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    background: var(--color-secondary-soft);
+    color: var(--color-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+  }
+  
+  .success-icon span {
+    font-size: 52px;
+  }
+  
+  h1 {
+    margin: 0 0 10px;
+    color: var(--color-primary);
+    font-size: 30px;
+    font-weight: 900;
+  }
+  
+  p {
+    color: var(--color-muted);
+    line-height: 1.5;
+    margin: 0 0 24px;
+  }
+  
+  button {
+    margin-top: 10px;
+  }

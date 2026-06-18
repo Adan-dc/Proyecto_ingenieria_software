@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6; /* bg-gray-100 */
+}
+
+/* Custom Scrollbar for better aesthetics */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8; 
+}
+
+/* Modal Animations */
+.modal-enter {
+    opacity: 0;
+    transform: scale(0.95);
+}
+.modal-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 300ms, transform 300ms;
+}
+.modal-leave {
+    opacity: 1;
+    transform: scale(1);
+}
+.modal-leave-active {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 300ms, transform 300ms;
+}
+
+/* Sidebar transition */
+#sidebar {
+    transition: transform 0.3s ease-in-out;
+}
+.btn-cerrar-sesion {
+    width: calc(100% - 24px);
+    margin: 16px 12px;
+    border: none;
+    border-radius: 12px;
+    background: #ef4444;
+    color: white;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  
+  .btn-cerrar-sesion:hover {
+    background: #dc2626;
+  }
+  /* FORZAR BOTÓN CERRAR SESIÓN ABAJO DEL SIDEBAR */
+.btn-cerrar-sesion-fijo {
+    position: fixed !important;
+    left: 16px !important;
+    bottom: 24px !important;
+    width: 224px !important;
+
+    border: none !important;
+    border-radius: 14px !important;
+    background: #dc2626 !important;
+    color: white !important;
+
+    padding: 15px 16px !important;
+    font-size: 16px !important;
+    font-weight: 900 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+
+    cursor: pointer !important;
+    box-shadow: 0 8px 16px rgba(220, 38, 38, 0.25) !important;
+    z-index: 9999 !important;
+}
+
+.btn-cerrar-sesion-fijo:hover {
+    background: #b91c1c !important;
+}

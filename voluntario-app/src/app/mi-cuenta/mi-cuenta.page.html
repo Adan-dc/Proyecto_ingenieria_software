@@ -1,0 +1,60 @@
+<ion-content>
+
+  <main class="mi-cuenta-page">
+
+    <section class="card-principal">
+
+      <div class="avatar">
+        👤
+      </div>
+
+      <h1>Mi cuenta</h1>
+
+      <p class="subtitulo">
+        Información del voluntario registrado en la aplicación.
+      </p>
+
+      <section class="datos-card" *ngIf="usuario">
+
+        <div class="dato">
+          <span>Nombre</span>
+          <strong>{{ usuario.nombre || 'Sin nombre' }}</strong>
+        </div>
+
+        <div class="dato">
+          <span>Correo</span>
+          <strong>{{ usuario.email || usuario.correo || 'Sin correo' }}</strong>
+        </div>
+
+        <div class="dato">
+          <span>RUT</span>
+          <strong>{{ usuario.rut || 'Sin RUT' }}</strong>
+        </div>
+
+        <div class="dato">
+          <span>Teléfono</span>
+          <strong>{{ usuario.telefono || 'Sin teléfono' }}</strong>
+        </div>
+
+      </section>
+
+      <section class="datos-card" *ngIf="!usuario">
+        <div class="dato">
+          <span>Sesión</span>
+          <strong>No hay usuario cargado</strong>
+        </div>
+      </section>
+
+      <button class="btn-volver-inicio" type="button" (click)="volverInicio()">
+        Volver al inicio
+      </button>
+
+      <button class="btn-cerrar-sesion" type="button" (click)="cerrarSesion()">
+        Cerrar sesión
+      </button>
+
+    </section>
+
+  </main>
+
+</ion-content>

@@ -1,0 +1,114 @@
+<ion-content>
+
+  <section class="inicio">
+
+    <div class="saludo-header">
+
+      <div class="saludo">
+        <h1>¡Hola, Vecino! 👋</h1>
+        <p>
+          Descubre dónde puedes hacer la diferencia y únete a nuevos talleres.
+        </p>
+      </div>
+
+      <div class="btn-mi-cuenta-home" (click)="irMiCuenta()">
+        <span class="icono-cuenta">👤</span>
+        <span>Mi cuenta</span>
+      </div>
+
+    </div>
+
+    <div class="titulo-seccion">
+      <h2>Talleres Disponibles</h2>
+
+      <button type="button" (click)="cargarTalleres()">
+        Actualizar ↻
+      </button>
+    </div>
+
+    <p *ngIf="cargando" class="cargando">
+      Cargando talleres...
+    </p>
+
+    <div class="lista-talleres" *ngIf="!cargando && talleres.length > 0">
+
+      <article class="card-taller" *ngFor="let taller of talleres">
+
+        <ng-container *ngIf="taller.imagenUrl; else imagenClase">
+          <img
+            class="imagen-taller-img"
+            [src]="taller.imagenUrl"
+            [alt]="taller.nombre"
+          >
+        </ng-container>
+
+        <ng-template #imagenClase>
+          <div class="imagen-taller" [ngClass]="obtenerImagenClase(taller)"></div>
+        </ng-template>
+
+        <div class="contenido-card">
+
+          <span class="etiqueta">
+            {{ taller.etiqueta || 'Taller comunitario' }}
+          </span>
+
+          <h3>{{ taller.nombre }}</h3>
+
+          <p>
+            {{ taller.descripcion || 'Sin descripción disponible.' }}
+          </p>
+
+          <div class="datos-taller">
+            <span>
+              📅 {{ formatearFecha(taller.fecha) }} | {{ obtenerHorario(taller) }}
+            </span>
+
+            <span>
+              📍 {{ taller.lugar || taller.ubicacion || taller.direccion || 'Lugar por confirmar' }}
+            </span>
+          </div>
+
+          <div class="cupos-texto">
+            <span>Lugares ocupados</span>
+            <strong>
+              {{ cuposOcupados(taller) }} de {{ cuposTotales(taller) }} ocupados
+            </strong>
+          </div>
+
+          <div class="barra">
+            <div
+              class="progreso"
+              [style.width.%]="porcentajeCupos(taller)">
+            </div>
+          </div>
+
+          <ion-button
+            expand="block"
+            color="success"
+            (click)="seleccionarTaller(taller)"
+            [disabled]="cuposOcupados(taller) >= cuposTotales(taller) || tallerFinalizado(taller)">
+            {{ tallerFinalizado(taller) ? 'Taller finalizado' : 'Unirme al Taller' }}
+          </ion-button>
+
+        </div>
+
+      </article>
+
+    </div>
+
+    <section *ngIf="!cargando && talleres.length === 0" class="card-vacia">
+      <h3>No hay talleres disponibles</h3>
+      <p>Cuando el administrador cree talleres, aparecerán aquí.</p>
+    </section>
+
+    <!-- BOTÓN MIS TALLERES INSCRITOS -->
+    <button
+      type="button"
+      class="btn-mis-talleres"
+      (click)="irMisTalleres()">
+      📋 Ver mis talleres inscritos
+    </button>
+
+  </section>
+
+</ion-content>

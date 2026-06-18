@@ -1,0 +1,116 @@
+<ion-content>
+
+  <header class="app-header">
+    <div class="header-inner">
+
+      <button class="icon-button" (click)="volver()">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+
+      <strong>Mis Solicitudes</strong>
+
+      <button class="icon-button" (click)="cargarVecino()">
+        <span class="material-symbols-outlined">refresh</span>
+      </button>
+
+    </div>
+  </header>
+
+  <main class="page solicitudes-page">
+
+    <section class="title-block">
+      <h1>Mis Solicitudes</h1>
+      <p>Realiza seguimiento de tus contribuciones a la comunidad.</p>
+    </section>
+
+    <section class="tabs">
+      <button
+        [class.active]="filtro === 'TODAS'"
+        (click)="cambiarFiltro('TODAS')">
+        Todas
+      </button>
+
+      <button
+        [class.active]="filtro === 'ACEPTADAS'"
+        (click)="cambiarFiltro('ACEPTADAS')">
+        Aceptadas
+      </button>
+
+      <button
+        [class.active]="filtro === 'RECHAZADAS'"
+        (click)="cambiarFiltro('RECHAZADAS')">
+        Rechazadas
+      </button>
+    </section>
+
+    <p class="estado-carga" *ngIf="cargando">
+      Cargando solicitudes...
+    </p>
+
+    <section class="lista" *ngIf="!cargando && solicitudesFiltradas().length > 0">
+
+      <article class="solicitud-card card" *ngFor="let solicitud of solicitudesFiltradas()">
+
+        <div class="icono-solicitud">
+          <span class="material-symbols-outlined">volunteer_activism</span>
+        </div>
+
+        <div class="contenido">
+
+          <div class="top">
+            <h2>{{ obtenerArticulo(solicitud) }}</h2>
+
+            <span
+              class="badge-estado"
+              [class.aceptada]="obtenerEstado(solicitud) === 'ACEPTADA'"
+              [class.rechazada]="obtenerEstado(solicitud) === 'RECHAZADA'"
+              [class.enviada]="obtenerEstado(solicitud) === 'ENVIADA'">
+              {{ obtenerEstado(solicitud) }}
+            </span>
+          </div>
+
+          <p>{{ obtenerTaller(solicitud) }}</p>
+
+          <div class="detalle">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Cantidad: {{ obtenerCantidad(solicitud) }}
+          </div>
+
+          <div class="detalle">
+            <span class="material-symbols-outlined">description</span>
+            {{ obtenerDescripcion(solicitud) }}
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+    <section class="vacio" *ngIf="!cargando && solicitudesFiltradas().length === 0">
+      <span class="material-symbols-outlined">inbox</span>
+
+      <h2 *ngIf="filtro === 'TODAS'">No tienes solicitudes</h2>
+      <h2 *ngIf="filtro === 'ACEPTADAS'">No tienes solicitudes aceptadas</h2>
+      <h2 *ngIf="filtro === 'RECHAZADAS'">No tienes solicitudes rechazadas</h2>
+
+      <p>Aún no hay solicitudes para mostrar.</p>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav">
+
+    <button (click)="volver()">
+      <span class="material-symbols-outlined">event</span>
+      Talleres
+    </button>
+
+    <button class="active">
+      <span class="material-symbols-outlined">list_alt</span>
+      Solicitudes
+    </button>
+
+  </nav>
+
+</ion-content>

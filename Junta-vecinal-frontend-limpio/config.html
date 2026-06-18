@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuración | Junta Vecinal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div>
+        <div class="logo"><div class="logo-icon"><i class="fa-solid fa-house-user"></i></div><div><h2>Junta Vecinal</h2><p>Administración</p></div></div>
+        <nav class="nav"><a href="./dashboard.html" class=""><i class="fa-solid fa-chart-line"></i>Panel</a>
+<a href="./vecinos.html" class=""><i class="fa-solid fa-users"></i>Vecinos</a>
+<a href="./subadmins.html" class=""><i class="fa-solid fa-user-shield"></i>Sub-Admins</a>
+<a href="./historial.html" class=""><i class="fa-solid fa-clock-rotate-left"></i>Historial</a>
+<a href="./config.html" class="active"><i class="fa-solid fa-gear"></i>Configuración</a></nav>
+      </div>
+      <button class="logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
+    </aside>
+    <main class="main">
+      
+<header class="header"><div><h1>Configuración</h1><p>Parámetros generales del portal administrativo.</p></div></header>
+<section class="card" style="max-width:620px;"><div class="card-header"><h2>Información de la Junta</h2></div><div class="card-body"><div class="form-group"><label>Nombre</label><input id="conf-nombre" value="Junta Vecinal"></div><div class="form-group"><label>Correo de contacto</label><input id="conf-correo" value="contacto@juntavecinal.cl"></div><button class="btn btn-primary" onclick="showToast('Configuración guardada','✅')">Guardar cambios</button></div></section>
+
+    </main>
+  </div>
+  <div class="toast" id="toast"><span class="toast-icon">✓</span><span id="toast-msg">Acción realizada</span></div>
+  <script src="./app.js"></script>
+<script src="./config.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', validarSesion);</script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vecinos | Junta Vecinal</title>
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
+
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div>
+
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fa-solid fa-house-user"></i>
+          </div>
+
+          <div>
+            <h2>Junta Vecinal</h2>
+            <p>Administración</p>
+          </div>
+        </div>
+
+        <nav class="nav">
+
+          <a href="./dashboard.html">
+            <i class="fa-solid fa-chart-line"></i>
+            Panel
+          </a>
+
+          <a href="./vecinos.html" class="active">
+            <i class="fa-solid fa-users"></i>
+            Vecinos
+          </a>
+
+          <a href="./subadmins.html">
+            <i class="fa-solid fa-user-shield"></i>
+            Sub-Admins
+          </a>
+
+          <a href="./historial.html">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            Historial
+          </a>
+
+          <a href="./config.html">
+            <i class="fa-solid fa-gear"></i>
+            Configuración
+          </a>
+
+        </nav>
+
+      </div>
+
+      <button class="logout" onclick="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Cerrar sesión
+      </button>
+
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main">
+
+      <!-- HEADER -->
+      <header class="header">
+
+        <div>
+          <h1>Registro de Vecinos</h1>
+          <p>
+            Administra cuentas vecinales, donantes y voluntarios sincronizados.
+          </p>
+        </div>
+
+        <div class="header-actions">
+
+          <button class="btn btn-primary" onclick="sincronizarVecinos()">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            Sincronizar voluntarios y donantes
+          </button>
+
+          <button class="btn btn-secondary" onclick="cargarVecinos()">
+            <i class="fa-solid fa-rotate-right"></i>
+            Actualizar
+          </button>
+
+        </div>
+
+      </header>
+
+      <!-- FORMULARIO REGISTRAR VECINO -->
+      <section class="card">
+
+        <div class="card-header">
+          <h2>Registrar vecino</h2>
+        </div>
+
+        <div class="card-body">
+
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label>Nombre completo</label>
+              <input id="v-nombre" placeholder="Ej: Juan Pérez">
+            </div>
+
+            <div class="form-group">
+              <label>RUT</label>
+              <input id="v-rut" placeholder="Ej: 12.345.678-9">
+            </div>
+
+            <div class="form-group">
+              <label>Correo</label>
+              <input id="v-email" type="email" placeholder="correo@ejemplo.com">
+            </div>
+
+            <div class="form-group">
+              <label>Teléfono</label>
+              <input id="v-tel" placeholder="Ej: 912345678">
+            </div>
+
+            <div class="form-group">
+              <label>Dirección / Casa</label>
+              <input id="v-casa" placeholder="Ej: Casa 14">
+            </div>
+
+          </div>
+
+          <button class="btn btn-primary" onclick="registrarVecino()">
+            <i class="fa-solid fa-plus"></i>
+            Registrar vecino
+          </button>
+
+        </div>
+
+      </section>
+
+      <!-- TABLA VECINOS -->
+      <section class="card">
+
+        <div class="card-header">
+
+          <div>
+            <h2>Vecinos registrados</h2>
+            <p class="text-muted">
+              Aquí se muestran vecinos registrados manualmente y usuarios sincronizados desde donantes y voluntarios.
+            </p>
+          </div>
+
+          <button
+            class="btn btn-secondary btn-sm"
+            onclick="exportTableToCSV('vecinos-table','vecinos.csv')"
+          >
+            <i class="fa-solid fa-file-export"></i>
+            Exportar CSV
+          </button>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Vecino</th>
+                <th>RUT</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody id="vecinos-table">
+              <tr>
+                <td colspan="5" class="empty">
+                  Cargando vecinos...
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <span class="toast-icon">✓</span>
+    <span id="toast-msg">Acción realizada</span>
+  </div>
+
+  <div class="modal-overlay" id="modal-editar-vecino">
+    <div class="modal">
+  
+      <div class="modal-header">
+        <h3>Editar vecino</h3>
+        <button onclick="closeModal('modal-editar-vecino')">×</button>
+      </div>
+  
+      <div class="modal-body">
+  
+        <input type="hidden" id="edit-rut-original">
+  
+        <div class="form-grid">
+  
+          <div class="form-group">
+            <label>Nombre</label>
+            <input id="edit-nombre" placeholder="Nombre">
+          </div>
+  
+          <div class="form-group">
+            <label>Apellido</label>
+            <input id="edit-apellido" placeholder="Apellido">
+          </div>
+  
+          <div class="form-group">
+            <label>Correo</label>
+            <input id="edit-correo" type="email" placeholder="correo@ejemplo.com">
+          </div>
+  
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input id="edit-telefono" placeholder="Teléfono">
+          </div>
+  
+          <div class="form-group">
+            <label>Dirección</label>
+            <input id="edit-direccion" placeholder="Dirección">
+          </div>
+  
+          <div class="form-group">
+            <label>Sector</label>
+            <input id="edit-sector" placeholder="Sector">
+          </div>
+  
+        </div>
+  
+      </div>
+  
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-editar-vecino')">
+          Cancelar
+        </button>
+  
+        <button class="btn btn-primary" onclick="guardarEdicionVecino()">
+          Guardar cambios
+        </button>
+      </div>
+  
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+  <script src="./vecinos.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      validarSesion();
+
+      if (typeof cargarVecinos === 'function') {
+        cargarVecinos();
+      }
+    });
+  </script>
+
+</body>
+</html>

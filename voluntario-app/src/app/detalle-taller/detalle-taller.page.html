@@ -1,0 +1,83 @@
+<ion-content>
+
+  <main class="contenedor-detalle" *ngIf="taller">
+
+    <section class="card-detalle">
+
+      <ng-container *ngIf="taller.imagenUrl; else imagenPorClase">
+        <div
+          class="imagen-detalle"
+          [style.background-image]="'url(' + taller.imagenUrl + ')'">
+          <button class="btn-cerrar" type="button" (click)="volverInicio()">×</button>
+        </div>
+      </ng-container>
+
+      <ng-template #imagenPorClase>
+        <div class="imagen-detalle" [ngClass]="obtenerImagenClase()">
+          <button class="btn-cerrar" type="button" (click)="volverInicio()">×</button>
+        </div>
+      </ng-template>
+
+      <div class="contenido-detalle">
+
+        <span class="etiqueta">
+          {{ taller.etiqueta || 'Taller comunitario' }}
+        </span>
+
+        <h1>{{ taller.nombre }}</h1>
+
+        <p class="profesor">
+          👤 Impartido por {{ taller.profesor || 'Profesor/a por confirmar' }}
+        </p>
+
+        <p class="descripcion">
+          {{ taller.descripcion || 'Sin descripción disponible.' }}
+        </p>
+
+        <div class="info-card">
+          <div class="icono-info">📅</div>
+
+          <div>
+            <h3>¿Cuándo?</h3>
+            <p>{{ formatearFecha(taller.fecha) }}</p>
+            <p>{{ obtenerHorario() }}</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="icono-info">📍</div>
+
+          <div>
+            <h3>¿Dónde?</h3>
+            <p>{{ obtenerLugar() }}</p>
+          </div>
+        </div>
+
+        <div class="cupos-texto">
+          <span>Lugares ocupados</span>
+          <strong>{{ cuposOcupados() }} de {{ cuposTotales() }} ocupados</strong>
+        </div>
+
+        <div class="barra">
+          <div class="progreso" [style.width.%]="porcentajeOcupado()"></div>
+        </div>
+
+        <p class="mensaje-cupos" *ngIf="cuposOcupados() >= cuposTotales()">
+          No quedan cupos disponibles para este taller.
+        </p>
+
+        <ion-button
+          expand="block"
+          color="success"
+          (click)="inscribirseAlTaller()"
+          [disabled]="cuposOcupados() >= cuposTotales()">
+          Inscribirse al Taller
+        </ion-button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</ion-content>

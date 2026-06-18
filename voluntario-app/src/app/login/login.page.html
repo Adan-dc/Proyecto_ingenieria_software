@@ -1,0 +1,41 @@
+<ion-content>
+
+  <main class="contenedor-login">
+
+    <section class="card-login">
+
+      <h1>Iniciar sesión</h1>
+
+      <p>
+        Ingresa con tu cuenta de voluntario para inscribirte a los talleres.
+      </p>
+
+      <div class="campo">
+        <label>Correo electrónico</label>
+        <input 
+          type="email" 
+          [(ngModel)]="email" 
+          placeholder="ejemplo@gmail.com">
+      </div>
+
+      <div class="campo">
+        <label>Contraseña</label>
+        <input 
+          type="password" 
+          [(ngModel)]="password" 
+          placeholder="Ingresa tu contraseña">
+      </div>
+
+      <ion-button expand="block" color="success" (click)="iniciarSesion()">
+        Iniciar sesión
+      </ion-button>
+
+      <button class="btn-registro" type="button" (click)="irARegistro()">
+        Crear cuenta nueva
+      </button>
+
+    </section>
+
+  </main>
+
+</ion-content>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TallerAdmin - Crear Taller</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#00685f",
+            "primary-dark": "#005049",
+            background: "#f8f9ff",
+            surface: "#ffffff",
+            "surface-soft": "#eff4ff",
+            outline: "#bcc9c6",
+            text: "#0b1c30",
+            muted: "#3d4947",
+            error: "#ba1a1a"
+          },
+          fontFamily: {
+            inter: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #bcc9c6;
+      border-radius: 8px;
+    }
+  </style>
+
+  <style>
+    .modo-oscuro {
+      background: #0f172a !important;
+      color: #e5e7eb !important;
+    }
+
+    .modo-oscuro .bg-background {
+      background: #0f172a !important;
+    }
+
+    .modo-oscuro .bg-surface {
+      background: #1e293b !important;
+    }
+
+    .modo-oscuro .bg-surface-soft {
+      background: #334155 !important;
+    }
+
+    .modo-oscuro .text-text {
+      color: #f8fafc !important;
+    }
+
+    .modo-oscuro .text-muted {
+      color: #cbd5e1 !important;
+    }
+
+    .modo-oscuro .border-outline {
+      border-color: #475569 !important;
+    }
+
+    .modo-oscuro input,
+    .modo-oscuro textarea,
+    .modo-oscuro select {
+      background: #0f172a !important;
+      color: #f8fafc !important;
+      border-color: #475569 !important;
+    }
+  </style>
+</head>
+
+<body class="bg-background text-text min-h-screen flex">
+
+  <!-- SIDEBAR -->
+  <aside class="hidden md:flex fixed left-0 top-0 h-full w-[280px] bg-surface border-r border-outline flex-col z-50">
+
+    <div class="p-6 border-b border-outline flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-lg">
+        TA
+      </div>
+
+      <div>
+        <h1 class="text-xl font-extrabold text-primary">TallerAdmin</h1>
+        <p class="text-sm text-muted">Junta Vecinal</p>
+      </div>
+    </div>
+
+    <div class="p-4">
+      <button onclick="window.location.href='taller.html'"
+      class="w-full bg-primary hover:bg-primary-dark text-white rounded-lg py-3 font-bold flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined">add</span>
+      Nuevo Taller
+    </button>
+    </div>
+
+    <nav class="flex-1 px-4 py-2 space-y-2">
+      <a href="taller.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#6063ee] text-white font-bold">
+        <span class="material-symbols-outlined">build</span>
+        Talleres
+      </a>
+    
+      <a href="ver-talleres.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-muted hover:bg-surface-soft">
+        <span class="material-symbols-outlined">list_alt</span>
+        Ver Talleres
+      </a>
+    
+      <a href="comentarios.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-muted hover:bg-surface-soft">
+        <span class="material-symbols-outlined">comment</span>
+        Comentarios
+      </a>
+    
+      <button onclick="toggleModoOscuro()"
+      class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-muted hover:bg-surface-soft">
+      <span class="material-symbols-outlined">dark_mode</span>
+      Modo oscuro
+    </button>
+    </nav>
+
+    <div class="p-4 border-t border-outline">
+      <button
+        type="button"
+        onclick="cerrarSesionGestionTalleres()"
+        class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-muted hover:bg-surface-soft text-left"
+      >
+        <span class="material-symbols-outlined">logout</span>
+        Cerrar sesión
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="flex-1 md:pl-[280px] min-h-screen flex flex-col">
+
+    <!-- TOPBAR -->
+    <header class="h-16 bg-surface border-b border-outline flex items-center justify-between px-6 sticky top-0 z-40">
+
+      <div class="md:hidden flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">menu</span>
+        <span class="font-extrabold text-primary text-xl">TallerAdmin</span>
+      </div>
+
+      <div class="hidden md:flex items-center bg-surface-soft rounded-full px-4 py-2 w-[360px]">
+        <span class="material-symbols-outlined text-muted">search</span>
+        <input type="text" placeholder="Buscar taller..." class="bg-transparent border-none focus:ring-0 w-full text-sm">
+      </div>
+
+      <div class="flex items-center gap-4">
+        <button class="text-muted hover:bg-surface-soft rounded-full p-2">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+
+        <button class="text-muted hover:bg-surface-soft rounded-full p-2">
+          <span class="material-symbols-outlined">help</span>
+        </button>
+
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+            A
+          </div>
+          <span class="hidden lg:block font-semibold">Admin</span>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- MAIN -->
+    <main class="p-5 md:p-8 overflow-y-auto">
+
+      <!-- HEADER -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+
+        <div>
+          <div class="flex items-center gap-2 text-sm text-muted mb-1">
+            <span>Talleres</span>
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <span>Crear nuevo taller</span>
+          </div>
+
+          <h2 class="text-3xl md:text-4xl font-extrabold text-text">
+            Crear Taller
+          </h2>
+
+          <p class="text-muted mt-2">
+            Registra un taller con su fecha, horario, cupos, imagen y artículos requeridos para donación.
+          </p>
+        </div>
+
+        <div class="flex gap-3">
+          <button type="button" onclick="limpiarFormularioCompleto()"
+            class="px-5 py-3 rounded-lg border border-outline bg-white text-muted font-bold hover:bg-surface-soft">
+            Limpiar
+          </button>
+
+          <button type="button" onclick="guardarTaller()"
+            class="px-5 py-3 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">save</span>
+            Guardar Taller
+          </button>
+        </div>
+
+      </div>
+
+      <!-- GRID GENERAL -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- COLUMNA IZQUIERDA -->
+        <section class="lg:col-span-8 space-y-6">
+
+          <!-- INFORMACIÓN GENERAL -->
+          <div class="bg-surface rounded-xl border border-outline shadow-sm overflow-hidden">
+
+            <div class="px-6 py-4 bg-surface-soft border-b border-outline flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">info</span>
+              <h3 class="text-xl font-extrabold">Información General</h3>
+            </div>
+
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-bold text-muted mb-1">Nombre del taller</label>
+                <input id="nombre" type="text" placeholder="Ej: Taller de Kinesiología"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-muted mb-1">Etiqueta</label>
+                <input id="etiqueta" type="text" placeholder="Ej: 💪 Salud y Movimiento"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-muted mb-1">Profesor/a encargado/a</label>
+                <input id="profesor" type="text" placeholder="Ej: Dra. Carolina Muñoz"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-bold text-muted mb-1">Descripción</label>
+                <textarea id="descripcion" rows="4" placeholder="Describe el objetivo del taller"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20 resize-y"></textarea>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- HORARIO Y UBICACIÓN -->
+          <div class="bg-surface rounded-xl border border-outline shadow-sm overflow-hidden">
+
+            <div class="px-6 py-4 bg-surface-soft border-b border-outline flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">event</span>
+              <h3 class="text-xl font-extrabold">Horario y Ubicación</h3>
+            </div>
+
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+
+              <div>
+                <label class="block text-sm font-bold text-muted mb-1">Fecha</label>
+                <input id="fecha" type="date"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+              </div>
+
+              <div></div>
+
+              <div>
+                <label class="block text-sm font-bold text-muted mb-1">Hora inicio</label>
+                <input id="horaInicio" type="time"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-muted mb-1">Hora fin</label>
+                <input id="horaFin" type="time"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-bold text-muted mb-1">Lugar</label>
+                <input id="lugar" type="text" placeholder="Ej: Sede Junta Vecinal"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-bold text-muted mb-1">Dirección</label>
+                <input id="direccion" type="text" placeholder="Ej: Pamela 1205, Maipú"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+              </div>
+
+            </div>
+          </div>
+
+        </section>
+
+        <!-- COLUMNA DERECHA -->
+        <aside class="lg:col-span-4 space-y-6">
+
+          <!-- IMAGEN / ESTADO / CUPOS -->
+          <div class="bg-surface rounded-xl border border-outline shadow-sm overflow-hidden">
+
+            <div class="h-44 bg-surface-soft relative overflow-hidden">
+              <img id="previewImagen" src="" alt="Vista previa del taller"
+                class="w-full h-full object-cover hidden">
+
+              <div id="placeholderImagen" class="absolute inset-0 flex flex-col items-center justify-center text-muted">
+                <span class="material-symbols-outlined text-5xl mb-2">image</span>
+                <p class="font-semibold">Vista previa de imagen</p>
+              </div>
+            </div>
+
+            <div class="p-6 space-y-5">
+
+              <div>
+                <label class="block text-sm font-bold text-muted mb-1">URL de imagen</label>
+                <input id="imagenUrl" type="text" placeholder="Pega aquí el link de la imagen"
+                  oninput="actualizarPreviewImagen()"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-muted mb-1">Clase de imagen</label>
+                <input id="imagenClase" type="text" placeholder="Ej: kinesiologia"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+              </div>
+
+              <hr class="border-outline">
+
+              <div>
+                <label class="block text-sm font-bold text-muted mb-1">Estado del taller</label>
+                <select id="estado"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20 font-bold">
+                  <option value="ACTIVO">🟢 ACTIVO</option>
+                  <option value="FINALIZADO">✅ FINALIZADO</option>
+                  <option value="CANCELADO">❌ CANCELADO</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-sm font-bold text-muted mb-1">Cupos ocupados</label>
+                  <input id="cuposOcupados" type="number" value="0" readonly
+                    class="w-full rounded-lg border-outline bg-surface-soft text-muted">
+                </div>
+
+                <div>
+                  <label class="block text-sm font-bold text-muted mb-1">Cupos totales</label>
+                  <input id="cuposTotales" type="number" placeholder="Ej: 15"
+                    class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ARTÍCULOS REQUERIDOS -->
+          <div class="bg-surface rounded-xl border border-outline shadow-sm overflow-hidden">
+
+            <div class="px-6 py-4 bg-surface-soft border-b border-outline flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">inventory_2</span>
+                <h3 class="text-xl font-extrabold">Artículos Requeridos</h3>
+              </div>
+            </div>
+
+            <div class="p-6 space-y-4">
+
+              <div>
+                <label class="block text-sm font-bold text-muted mb-1">Nombre artículo</label>
+                <input id="articuloNombre" type="text" placeholder="Ej: Bandas elásticas"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-muted mb-1">Descripción</label>
+                <textarea id="articuloDescripcion" rows="2" placeholder="Ej: Bandas de resistencia media"
+                  class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20 resize-y"></textarea>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-sm font-bold text-muted mb-1">Cantidad</label>
+                  <input id="articuloCantidad" type="number" placeholder="Ej: 5"
+                    class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+                </div>
+
+                <div>
+                  <label class="block text-sm font-bold text-muted mb-1">Icono</label>
+                  <input id="articuloIcono" type="text" placeholder="Ej: 🏃"
+                    class="w-full rounded-lg border-outline focus:border-primary focus:ring-primary/20">
+                </div>
+              </div>
+
+              <button type="button" onclick="agregarArticulo()"
+                class="w-full bg-[#6063ee] hover:bg-[#4648d4] text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined">add_circle</span>
+                Agregar artículo
+              </button>
+
+            </div>
+
+            <div class="border-t border-outline">
+              <ul id="listaArticulos" class="divide-y divide-outline">
+                <li class="p-5 text-muted text-sm">
+                  Aún no has agregado artículos.
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+        </aside>
+
+      </div>
+
+    </main>
+
+  </div>
+  <script src="js/auth.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        validarSesionGestionTalleres();
+        mostrarUsuarioGestionTalleres();
+      });
+    </script>
+
+  <script src="js/crear-taller.js"></script>
+</body>
+</html>

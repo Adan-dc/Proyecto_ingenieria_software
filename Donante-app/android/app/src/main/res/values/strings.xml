@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Donante App</string>
+    <string name="title_activity_main">Donante App</string>
+    <string name="package_name">com.proyecto.donante</string>
+    <string name="custom_url_scheme">com.proyecto.donante</string>
+</resources>

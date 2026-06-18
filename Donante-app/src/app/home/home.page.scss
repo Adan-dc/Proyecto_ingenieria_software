@@ -1,0 +1,152 @@
+.home-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.profile-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--color-outline);
+  background: var(--color-secondary-soft);
+  color: var(--color-secondary);
+  font-weight: 900;
+}
+
+.title-block {
+  margin-bottom: 20px;
+}
+
+.title-block h1 {
+  margin: 0 0 8px;
+  color: var(--color-primary);
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.title-block p {
+  color: var(--color-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.filters button {
+  border: 1px solid rgba(191, 201, 193, 0.7);
+  background: white;
+  color: var(--color-text);
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.filters .active {
+  background: var(--color-secondary);
+  color: white;
+}
+
+.grid-talleres {
+  display: grid;
+  gap: 18px;
+}
+
+.taller-card {
+  overflow: hidden;
+}
+
+.img-box {
+  position: relative;
+  height: 170px;
+  background: var(--color-surface-high);
+}
+
+.img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  background: var(--color-secondary-soft);
+  color: var(--color-secondary);
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge span {
+  font-size: 16px;
+}
+
+.card-body {
+  padding: 18px;
+}
+
+.card-body h2 {
+  margin: 0 0 8px;
+  font-size: 21px;
+  font-weight: 900;
+  color: var(--color-text);
+}
+
+.card-body p {
+  margin: 0 0 14px;
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #707973;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.meta span {
+  font-size: 18px;
+}
+
+.estado-carga {
+  color: var(--color-muted);
+  text-align: center;
+  margin-top: 40px;
+  font-weight: 700;
+}
+
+.vacio {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--color-muted);
+}
+
+.vacio span {
+  font-size: 52px;
+  color: var(--color-primary);
+}
+
+.vacio h2 {
+  color: var(--color-text);
+  margin: 10px 0 6px;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.vacio p {
+  margin: 0;
+}

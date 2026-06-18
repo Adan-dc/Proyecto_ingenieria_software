@@ -1,0 +1,86 @@
+ion-content {
+    --background: #f1f5f9;
+  }
+  
+  .contenedor-login {
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 18px;
+  }
+  
+  .card-login {
+    width: 100%;
+    max-width: 430px;
+    background: white;
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+    border: 1px solid #e2e8f0;
+  }
+  
+  .card-login h1 {
+    color: #0f172a;
+    font-size: 30px;
+    font-weight: 900;
+    margin: 0 0 10px;
+    text-align: center;
+  }
+  
+  .card-login p {
+    color: #64748b;
+    font-size: 15px;
+    line-height: 1.5;
+    text-align: center;
+    margin: 0 0 28px;
+  }
+  
+  .campo {
+    margin-bottom: 18px;
+  }
+  
+  .campo label {
+    display: block;
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  
+  .campo input {
+    width: 100%;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 15px;
+    color: #1e293b;
+    outline: none;
+  }
+  
+  .campo input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+  
+  ion-button {
+    --background: #166534;
+    --background-hover: #14532d;
+    --background-activated: #14532d;
+    --color: white;
+    --border-radius: 10px;
+    font-weight: 800;
+    text-transform: none;
+    margin-top: 22px;
+  }
+  
+  .btn-registro {
+    width: 100%;
+    margin-top: 18px;
+    background: transparent;
+    border: none;
+    color: #2563eb;
+    font-weight: 800;
+    cursor: pointer;
+  }

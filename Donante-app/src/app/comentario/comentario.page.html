@@ -1,0 +1,58 @@
+<ion-content>
+
+  <header class="app-header">
+    <div class="header-inner">
+      <button class="icon-button" (click)="volver()">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+
+      <strong>Comentario</strong>
+
+      <div style="width:42px"></div>
+    </div>
+  </header>
+
+  <main class="page comentario-page">
+
+    <section class="card resumen-card">
+
+      <h1>Último paso</h1>
+
+      <p>
+        Cuéntanos el estado de los artículos que donarás. Esta información será revisada por la administración.
+      </p>
+
+      <div class="resumen">
+        <strong>Taller seleccionado</strong>
+        <span>{{ taller?.nombre }}</span>
+      </div>
+
+      <div class="articulos">
+        <strong>Artículos</strong>
+
+        <div class="articulo" *ngFor="let articulo of articulos">
+          <span>{{ articulo.nombre }}</span>
+          <b>x{{ articulo.cantidad }}</b>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Comentario</label>
+        <div class="input-box">
+          <span class="material-symbols-outlined">edit_note</span>
+          <textarea
+            placeholder="Ej: La ropa está limpia y en buen estado..."
+            [(ngModel)]="comentario">
+          </textarea>
+        </div>
+      </div>
+
+      <button class="primary-btn" (click)="enviarSolicitud()" [disabled]="enviando">
+        {{ enviando ? 'Enviando...' : 'Enviar solicitud' }}
+      </button>
+
+    </section>
+
+  </main>
+
+</ion-content>

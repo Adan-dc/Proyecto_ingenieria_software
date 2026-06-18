@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario | Gestión de Donaciones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 flex h-screen overflow-hidden text-gray-800">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-xl flex-shrink-0 z-20 hidden md:flex flex-col">
+        <div class="h-16 flex items-center justify-center border-b border-gray-100">
+            <h1 class="text-xl font-bold text-indigo-600"><i class="fa-solid fa-hand-holding-heart mr-2"></i>Donaciones</h1>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-2 px-4">
+                <li>
+                    <a href="principal.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-lg font-medium transition-colors">
+                        <i class="fa-solid fa-house"></i> Principal
+                    </a>
+                </li>
+                <li>
+                    <a href="solicitudes.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-lg font-medium transition-colors">
+                        <i class="fa-solid fa-inbox"></i> Solicitudes
+                    </a>
+                </li>
+                <li>
+                    <a href="inventario.html" class="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-700 rounded-lg font-medium transition-colors">
+                        <i class="fa-solid fa-boxes-stacked"></i> Inventario
+                    </a>
+                </li>
+                <li>
+                    <a href="historial-eliminadas.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-lg font-medium transition-colors">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Historial
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10">
+            <h2 class="text-xl font-semibold text-gray-800">Inventario y Donaciones Aceptadas</h2>
+        </header>
+
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <!-- KPIs -->
+                <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Total Aceptadas</p>
+                        <h4 class="text-2xl font-bold text-gray-800" id="kpiTotal">0</h4>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500"><i class="fa-solid fa-check-to-slot"></i></div>
+                </div>
+                <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">En Inventario</p>
+                        <h4 class="text-2xl font-bold text-gray-800" id="kpiInventario">0</h4>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500"><i class="fa-solid fa-boxes-stacked"></i></div>
+                </div>
+                <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">En Taller</p>
+                        <h4 class="text-2xl font-bold text-gray-800" id="kpiTaller">0</h4>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-500"><i class="fa-solid fa-wrench"></i></div>
+                </div>
+                <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">En Camino</p>
+                        <h4 class="text-2xl font-bold text-gray-800" id="kpiEnCamino">0</h4>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-500"><i class="fa-solid fa-truck"></i></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200">
+                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">ID</th>
+                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Donante</th>
+                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Artículo</th>
+                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Cantidad</th>
+                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Destino</th>
+                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Estado Envío</th>
+                            <th class="py-3 px-6 text-sm font-semibold text-gray-600 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventarioTableBody" class="divide-y divide-gray-100">
+                        <!-- Llenado por JS -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Editar -->
+    <div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50 modal-enter-active">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
+            <div class="p-5 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Editar Donación #<span id="editIdDisplay"></span></h3>
+                <button onclick="closeModal('editModal')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-5 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad</label>
+                    <input type="number" id="editCantidad" required min="0" class="w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Estado Envío</label>
+                    <select id="editEstado" class="w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                        <option value="EN_CAMINO">En Camino</option>
+                        <option value="LLEGO">Llegó</option>
+                    </select>
+                </div>
+            </div>
+            <div class="p-5 border-t border-gray-100 bg-gray-50 flex justify-end">
+                <button id="btnSaveEdit" class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-medium text-sm transition-colors shadow-sm">Actualizar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Eliminar -->
+    <div id="deleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50 modal-enter-active">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+            <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-red-50">
+                <h3 class="text-lg font-bold text-red-800"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Eliminar Donación</h3>
+                <button onclick="closeModal('deleteModal')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-5">
+                <p class="text-sm text-gray-600 mb-4">Estás a punto de eliminar la donación #<span id="deleteIdDisplay" class="font-bold"></span>. Esto removerá el registro del inventario.</p>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Justificación Obligatoria <span class="text-red-500">*</span></label>
+                    <textarea id="deleteJustificacion" rows="3" required placeholder="Motivo de la eliminación..." class="w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-red-500 focus:border-red-500 outline-none"></textarea>
+                </div>
+            </div>
+            <div class="p-5 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+                <button onclick="closeModal('deleteModal')" class="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg font-medium text-sm transition-colors">Cancelar</button>
+                <button id="btnConfirmDelete" class="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-lg font-medium text-sm transition-colors shadow-sm">Confirmar Eliminación</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="inventario.js"></script>
+</body>
+</html>

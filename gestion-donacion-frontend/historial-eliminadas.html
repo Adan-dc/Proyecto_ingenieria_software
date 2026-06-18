@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial | Gestión de Donaciones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 flex h-screen overflow-hidden text-gray-800">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-xl flex-shrink-0 z-20 hidden md:flex flex-col">
+        <div class="h-16 flex items-center justify-center border-b border-gray-100">
+            <h1 class="text-xl font-bold text-indigo-600"><i class="fa-solid fa-hand-holding-heart mr-2"></i>Donaciones</h1>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-2 px-4">
+                <li>
+                    <a href="principal.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-lg font-medium transition-colors">
+                        <i class="fa-solid fa-house"></i> Principal
+                    </a>
+                </li>
+                <li>
+                    <a href="solicitudes.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-lg font-medium transition-colors">
+                        <i class="fa-solid fa-inbox"></i> Solicitudes
+                    </a>
+                </li>
+                <li>
+                    <a href="inventario.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-lg font-medium transition-colors">
+                        <i class="fa-solid fa-boxes-stacked"></i> Inventario
+                    </a>
+                </li>
+                <li>
+                    <a href="historial-eliminadas.html" class="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-700 rounded-lg font-medium transition-colors">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Historial
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10">
+            <h2 class="text-xl font-semibold text-gray-800">Historial de Eliminaciones</h2>
+        </header>
+
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200">
+                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">ID Orig.</th>
+                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Artículo</th>
+                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Cantidad</th>
+                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Justificación</th>
+                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historialTableBody" class="divide-y divide-gray-100">
+                        <!-- Llenado por JS -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="historial.js"></script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Principal | Gestión de Donaciones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 flex h-screen overflow-hidden text-gray-800">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-xl flex-shrink-0 z-20 hidden md:flex flex-col">
+        <div class="h-16 flex items-center justify-center border-b border-gray-100">
+            <h1 class="text-xl font-bold text-indigo-600"><i class="fa-solid fa-hand-holding-heart mr-2"></i>Donaciones</h1>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-2 px-4">
+                <li>
+                    <a href="principal.html" class="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-700 rounded-lg font-medium transition-colors">
+                        <i class="fa-solid fa-house"></i> Principal
+                    </a>
+                </li>
+                <li>
+                    <a href="solicitudes.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-lg font-medium transition-colors">
+                        <i class="fa-solid fa-inbox"></i> Solicitudes
+                    </a>
+                </li>
+                <li>
+                    <a href="inventario.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-lg font-medium transition-colors">
+                        <i class="fa-solid fa-boxes-stacked"></i> Inventario
+                    </a>
+                </li>
+                <li>
+                    <a href="historial-eliminadas.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-lg font-medium transition-colors">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Historial
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10">
+            <div class="flex items-center gap-4">
+                <button class="md:hidden text-gray-500 hover:text-indigo-600 focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <h2 class="text-xl font-semibold text-gray-800">Vista Principal</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="openModal('addModal')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Agregar Donación
+                </button>
+                <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
+                    A
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- KPI Card -->
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 mb-1">Solicitudes Pendientes</p>
+                            <h3 class="text-3xl font-bold text-gray-800">Gestionar</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                            <i class="fa-solid fa-inbox text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="solicitudes.html" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1">Ver solicitudes <i class="fa-solid fa-arrow-right text-xs"></i></a>
+                    </div>
+                </div>
+
+                <!-- KPI Card -->
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 mb-1">Inventario Activo</p>
+                            <h3 class="text-3xl font-bold text-gray-800">Administrar</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-green-500">
+                            <i class="fa-solid fa-boxes-stacked text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="inventario.html" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1">Ir a inventario <i class="fa-solid fa-arrow-right text-xs"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center max-w-2xl mx-auto mt-10">
+                <img src="https://cdn-icons-png.flaticon.com/512/3062/3062319.png" alt="Welcome" class="w-32 mx-auto mb-6 opacity-80">
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Bienvenido al Sistema</h3>
+                <p class="text-gray-500">Selecciona una opción del menú lateral para comenzar a gestionar las donaciones, revisar el inventario o ver el historial de movimientos.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Agregar Donación Directa -->
+    <div id="addModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50 modal-enter-active">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden flex flex-col">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center pb-4">
+                <h3 class="text-xl font-bold text-gray-800">Agregar Donación Manual</h3>
+                <button onclick="closeModal('addModal')" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Barra de Progreso -->
+            <div class="w-full bg-gray-200 h-2">
+                <div id="progressBar" class="bg-green-500 h-2 transition-all duration-300" style="width: 0%"></div>
+            </div>
+            
+            <div class="p-6 overflow-y-auto max-h-[60vh]">
+                <form id="formAdd" class="space-y-4" novalidate>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">RUT Donante</label>
+                            <!-- Límite de maxlength 9 -->
+                            <input type="text" id="addRut" maxlength="9" class="progress-input w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none" placeholder="123456789">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo del donante</label>
+                            <input type="text" id="addNombre" class="progress-input w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none" placeholder="Juan Pérez González">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Número de teléfono del donante</label>
+                        <input type="text" id="addTelefono" maxlength="9"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 9)"
+                            class="progress-input w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none" placeholder="987654321">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Artículo</label>
+                            <input type="text" id="addArticulo" class="progress-input w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad</label>
+                            <input type="number" id="addCantidad" min="1" class="progress-input w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Descripción (Opcional)</label>
+                        <textarea id="addDesc" rows="2" class="w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Destino</label>
+                            <select id="addDestino" class="progress-input w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                                <option value="" disabled selected>Seleccionar...</option>
+                                <option value="INVENTARIO">Inventario</option>
+                                <option value="TALLER">Taller</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Estado Envío</label>
+                            <select id="addEstado" class="progress-input w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                                <option value="" disabled selected>Seleccionar...</option>
+                                <option value="EN_CAMINO">En Camino</option>
+                                <option value="LLEGO">Llegó</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Select de Taller: solo visible cuando Destino = TALLER -->
+                    <div id="tallerSelectWrapper" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Taller asignado</label>
+                        <select id="tallerSelect" class="w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                            <option value="">Cargando talleres...</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            <div class="p-6 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+                <button onclick="closeModal('addModal')" class="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg font-medium text-sm transition-colors">Cancelar</button>
+                <button id="btnSaveAdd" type="button" class="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg font-medium text-sm transition-colors shadow-sm">Guardar Donación</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Error Personalizado -->
+    <div id="errorModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden items-center justify-center z-[60] modal-enter-active">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden text-center p-8">
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6">
+                <i class="fa-solid fa-exclamation text-3xl text-red-600"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">Formulario Incompleto</h3>
+            <p class="text-sm text-gray-500 mb-6 leading-relaxed">No se puede completar el registro de la donación, ya que, se deben llenar todos los campos del formulario</p>
+            <button onclick="closeModal('errorModal')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-xl transition-colors">
+                Entendido
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="principal.js"></script>
+</body>
+</html>

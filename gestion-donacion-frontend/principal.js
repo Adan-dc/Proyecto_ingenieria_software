@@ -1,9 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
-    setupRutValidation();
-    setupProgressBar();
-    loadTalleres();
-    setupDestinoToggle();
-});
 
 // ---------------------------------------------------------------
 // Carga dinámica de talleres desde la API

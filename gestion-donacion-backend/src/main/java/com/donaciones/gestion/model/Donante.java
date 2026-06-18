@@ -25,11 +25,14 @@ public class Donante {
     @Column(name = "`correo`")
     private String correo;
 
-    @Column(name = "`telefono`", length = 9)
+    @Column(name = "`telefono`", length = 20)
     private String telefono;
 
     @Column(name = "`direccion`")
     private String direccion;
+
+    @Column(name = "`sector`")
+    private String sector;
 
     @Column(name = "`ID_Usuario`")
     private Long idUsuario;

@@ -1,155 +1,319 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario | Gestión de Donaciones</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-gray-100 flex h-screen overflow-hidden text-gray-800">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-xl flex-shrink-0 z-20 hidden md:flex flex-col">
-        <div class="h-16 flex items-center justify-center border-b border-gray-100">
-            <h1 class="text-xl font-bold text-indigo-600"><i class="fa-solid fa-hand-holding-heart mr-2"></i>Donaciones</h1>
-        </div>
-        <nav class="flex-1 overflow-y-auto py-4">
-            <ul class="space-y-2 px-4">
-                <li>
-                    <a href="principal.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-lg font-medium transition-colors">
-                        <i class="fa-solid fa-house"></i> Principal
-                    </a>
-                </li>
-                <li>
-                    <a href="solicitudes.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-lg font-medium transition-colors">
-                        <i class="fa-solid fa-inbox"></i> Solicitudes
-                    </a>
-                </li>
-                <li>
-                    <a href="inventario.html" class="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-700 rounded-lg font-medium transition-colors">
-                        <i class="fa-solid fa-boxes-stacked"></i> Inventario
-                    </a>
-                </li>
-                <li>
-                    <a href="historial-eliminadas.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-indigo-600 rounded-lg font-medium transition-colors">
-                        <i class="fa-solid fa-clock-rotate-left"></i> Historial
-                    </a>
-                </li>
-            </ul>
-        </nav>
+  <title>Inventario | Gestión de Donaciones</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  >
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+  <div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-white border-r border-gray-200 shadow-sm hidden md:block">
+
+      <div class="h-16 flex items-center justify-center border-b border-gray-100">
+        <h1 class="text-2xl font-bold text-indigo-600">
+          <i class="fa-solid fa-hand-holding-heart mr-2"></i>
+          Donaciones
+        </h1>
+      </div>
+
+      <nav class="p-4 space-y-2">
+
+        <a href="principal.html"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium">
+          <i class="fa-solid fa-house"></i>
+          Principal
+        </a>
+
+        <a href="solicitudes.html"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium">
+          <i class="fa-solid fa-inbox"></i>
+          Solicitudes
+        </a>
+
+        <a href="./acopio.html"
+          class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium">
+          <i class="fa-solid fa-location-dot"></i>
+          Punto de acopio
+        </a>
+
+        <a href="inventario.html"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg bg-indigo-50 text-indigo-600 font-medium">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          Inventario
+        </a>
+
+        <a href="historial-eliminadas.html"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          Historial
+        </a>
+
+      </nav>
+
+            <div class="px-4 pb-4 mt-auto">
+              <button
+                type="button"
+                onclick="cerrarSesionGestionDonaciones()"
+                class="btn-cerrar-sesion-fijo">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Cerrar sesión
+            </button>
+          </div>
+
     </aside>
 
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
-        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10">
-            <h2 class="text-xl font-semibold text-gray-800">Inventario y Donaciones Aceptadas</h2>
-        </header>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1">
 
-        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <!-- KPIs -->
-                <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-gray-500 font-medium">Total Aceptadas</p>
-                        <h4 class="text-2xl font-bold text-gray-800" id="kpiTotal">0</h4>
-                    </div>
-                    <div class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500"><i class="fa-solid fa-check-to-slot"></i></div>
-                </div>
-                <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-gray-500 font-medium">En Inventario</p>
-                        <h4 class="text-2xl font-bold text-gray-800" id="kpiInventario">0</h4>
-                    </div>
-                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500"><i class="fa-solid fa-boxes-stacked"></i></div>
-                </div>
-                <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-gray-500 font-medium">En Taller</p>
-                        <h4 class="text-2xl font-bold text-gray-800" id="kpiTaller">0</h4>
-                    </div>
-                    <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-500"><i class="fa-solid fa-wrench"></i></div>
-                </div>
-                <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex items-center justify-between">
-                    <div>
-                        <p class="text-xs text-gray-500 font-medium">En Camino</p>
-                        <h4 class="text-2xl font-bold text-gray-800" id="kpiEnCamino">0</h4>
-                    </div>
-                    <div class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-500"><i class="fa-solid fa-truck"></i></div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-50 border-b border-gray-200">
-                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">ID</th>
-                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Donante</th>
-                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Artículo</th>
-                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Cantidad</th>
-                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Destino</th>
-                            <th class="py-3 px-6 text-sm font-semibold text-gray-600">Estado Envío</th>
-                            <th class="py-3 px-6 text-sm font-semibold text-gray-600 text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventarioTableBody" class="divide-y divide-gray-100">
-                        <!-- Llenado por JS -->
-                    </tbody>
-                </table>
-            </div>
-        </main>
-    </div>
-
-    <!-- Modal Editar -->
-    <div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50 modal-enter-active">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
-            <div class="p-5 border-b border-gray-100 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-800">Editar Donación #<span id="editIdDisplay"></span></h3>
-                <button onclick="closeModal('editModal')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-5 space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad</label>
-                    <input type="number" id="editCantidad" required min="0" class="w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Estado Envío</label>
-                    <select id="editEstado" class="w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none">
-                        <option value="EN_CAMINO">En Camino</option>
-                        <option value="LLEGO">Llegó</option>
-                    </select>
-                </div>
-            </div>
-            <div class="p-5 border-t border-gray-100 bg-gray-50 flex justify-end">
-                <button id="btnSaveEdit" class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-medium text-sm transition-colors shadow-sm">Actualizar</button>
-            </div>
+      <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 shadow-sm">
+        <div id="usuario-logueado" style="font-weight: 800; color: #4f46e5;"></div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-800">
+            Inventario de Donaciones
+          </h2>
+          <p class="text-sm text-gray-500">
+            Administra las donaciones ingresadas manualmente.
+          </p>
         </div>
-    </div>
 
-    <!-- Modal Eliminar -->
-    <div id="deleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50 modal-enter-active">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
-            <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-red-50">
-                <h3 class="text-lg font-bold text-red-800"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Eliminar Donación</h3>
-                <button onclick="closeModal('deleteModal')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
+        <button
+          onclick="cargarInventario()"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm"
+        >
+          <i class="fa-solid fa-rotate-right mr-2"></i>
+          Actualizar
+        </button>
+
+      </header>
+
+      <section class="p-6">
+
+        <!-- FORMULARIO DONACIÓN MANUAL -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+
+          <div class="mb-6">
+            <h3 class="text-lg font-bold text-gray-800">
+              Agregar Donación Manual
+            </h3>
+            <p class="text-sm text-gray-500">
+              Esta donación se agregará directamente a inventario y, si ingresas el taller, actualizará sus artículos requeridos.
+            </p>
+          </div>
+
+          <form id="formDonacionManual" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            <!-- RUT -->
+            <div>
+              <label for="rutDonante" class="block text-sm font-medium text-gray-700 mb-1">
+                RUT Donante
+              </label>
+              <input
+                type="text"
+                id="rutDonante"
+                required
+                class="w-full border-gray-300 rounded-lg shadow-sm py-2 px-3 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                placeholder="Ej: 12345678-9"
+              >
             </div>
-            <div class="p-5">
-                <p class="text-sm text-gray-600 mb-4">Estás a punto de eliminar la donación #<span id="deleteIdDisplay" class="font-bold"></span>. Esto removerá el registro del inventario.</p>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Justificación Obligatoria <span class="text-red-500">*</span></label>
-                    <textarea id="deleteJustificacion" rows="3" required placeholder="Motivo de la eliminación..." class="w-full border-gray-300 rounded-md shadow-sm p-2 text-sm border focus:ring-red-500 focus:border-red-500 outline-none"></textarea>
-                </div>
+
+            <!-- NOMBRE -->
+            <div>
+              <label for="nombreDonante" class="block text-sm font-medium text-gray-700 mb-1">
+                Nombre Donante
+              </label>
+              <input
+                type="text"
+                id="nombreDonante"
+                required
+                class="w-full border-gray-300 rounded-lg shadow-sm py-2 px-3 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                placeholder="Ej: Juan Pérez"
+              >
             </div>
-            <div class="p-5 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
-                <button onclick="closeModal('deleteModal')" class="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg font-medium text-sm transition-colors">Cancelar</button>
-                <button id="btnConfirmDelete" class="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-lg font-medium text-sm transition-colors shadow-sm">Confirmar Eliminación</button>
+
+            <!-- TELÉFONO -->
+            <div>
+              <label for="telefonoDonante" class="block text-sm font-medium text-gray-700 mb-1">
+                Teléfono
+              </label>
+              <input
+                type="text"
+                id="telefonoDonante"
+                class="w-full border-gray-300 rounded-lg shadow-sm py-2 px-3 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                placeholder="Ej: 912345678"
+              >
             </div>
+
+            <!-- OBJETO -->
+            <div>
+              <label for="articulo" class="block text-sm font-medium text-gray-700 mb-1">
+                Objeto / Artículo Donado
+              </label>
+              <input
+                type="text"
+                id="articulo"
+                required
+                class="w-full border-gray-300 rounded-lg shadow-sm py-2 px-3 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                placeholder="Ej: Acuarelas"
+              >
+            </div>
+
+            <!-- CANTIDAD -->
+            <div>
+              <label for="cantidad" class="block text-sm font-medium text-gray-700 mb-1">
+                Cantidad
+              </label>
+              <input
+                type="number"
+                id="cantidad"
+                required
+                min="1"
+                class="w-full border-gray-300 rounded-lg shadow-sm py-2 px-3 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                placeholder="Ej: 3"
+              >
+            </div>
+
+            <!-- ID TALLER -->
+            <div>
+              <label for="codigoTaller" class="block text-sm font-medium text-gray-700 mb-1">
+                ID del Taller
+              </label>
+              <input
+                type="number"
+                id="codigoTaller"
+                min="1"
+                class="w-full border-gray-300 rounded-lg shadow-sm py-2 px-3 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                placeholder="Ej: 1"
+              >
+              <p class="text-xs text-gray-500 mt-1">
+                Si lo completas, se actualizará automáticamente el artículo requerido del taller.
+              </p>
+            </div>
+
+            <!-- NOMBRE TALLER -->
+            <div class="md:col-span-2">
+              <label for="nombreTaller" class="block text-sm font-medium text-gray-700 mb-1">
+                Nombre Taller
+              </label>
+              <input
+                type="text"
+                id="nombreTaller"
+                class="w-full border-gray-300 rounded-lg shadow-sm py-2 px-3 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                placeholder="Ej: Taller de Artes"
+              >
+            </div>
+
+            <!-- DESCRIPCIÓN -->
+            <div class="md:col-span-2">
+              <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">
+                Descripción
+              </label>
+              <textarea
+                id="descripcion"
+                rows="3"
+                class="w-full border-gray-300 rounded-lg shadow-sm py-2 px-3 text-sm border focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                placeholder="Ej: 2 set completos de acuarelas para pintar"
+              ></textarea>
+            </div>
+
+            <!-- BOTONES -->
+            <div class="md:col-span-2 flex justify-end gap-3 pt-2">
+
+              <button
+                type="reset"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2.5 rounded-lg text-sm font-semibold"
+              >
+                Limpiar
+              </button>
+
+              <button
+                type="submit"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm"
+              >
+                <i class="fa-solid fa-plus mr-2"></i>
+                Ingresar al Inventario
+              </button>
+
+            </div>
+
+          </form>
+
         </div>
-    </div>
 
-    <script src="app.js"></script>
-    <script src="inventario.js"></script>
+        <!-- TABLA INVENTARIO -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-bold text-gray-800">
+                Inventario Actual
+              </h3>
+              <p class="text-sm text-gray-500">
+                Donaciones disponibles en inventario.
+              </p>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+
+            <table class="w-full text-sm text-left">
+
+              <thead class="bg-gray-50 border-b border-gray-200 text-gray-600 uppercase text-xs">
+                <tr>
+                  <th class="px-6 py-4">ID</th>
+                  <th class="px-6 py-4">Objeto</th>
+                  <th class="px-6 py-4">Cantidad</th>
+                  <th class="px-6 py-4">RUT</th>
+                  <th class="px-6 py-4">Donante</th>
+                  <th class="px-6 py-4">Estado</th>
+                  <th class="px-6 py-4">Descripción</th>
+                  <th class="px-6 py-4">Acciones</th>
+                </tr>
+              </thead>
+
+              <tbody id="tablaInventario">
+                <tr>
+                  <td colspan="8" class="text-center py-6 text-gray-500">
+                    Cargando inventario...
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="./auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      validarSesionGestionDonaciones();
+      mostrarUsuarioGestionDonaciones();
+    });
+  </script>
+
+  <!-- Si tu JS está dentro de carpeta js, cambia a: js/inventario.js -->
+  <script src="inventario.js"></script>
+
 </body>
-</html>
+</html>3

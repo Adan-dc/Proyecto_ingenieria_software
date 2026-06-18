@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080/api/v1/gestion';
+const API_BASE_URL = 'http://localhost:8083/api/v1/gestion';
 
 // Modal utility functions
 function openModal(modalId) {

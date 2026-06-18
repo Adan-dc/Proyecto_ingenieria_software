@@ -1,257 +1,597 @@
 package com.donaciones.gestion.service;
 
 import com.donaciones.gestion.dto.ApkRequestDTO;
-import com.donaciones.gestion.dto.DonacionRequestDTO;
-import com.donaciones.gestion.dto.EdicionInventarioDTO;
-import com.donaciones.gestion.dto.EliminacionDTO;
+import com.donaciones.gestion.dto.EliminacionInventarioDTO;
 import com.donaciones.gestion.dto.RevisionDTO;
-import com.donaciones.gestion.model.*;
+import com.donaciones.gestion.dto.VecinoRegistroDTO;
+
+import com.donaciones.gestion.model.DestinoDonacion;
+import com.donaciones.gestion.model.DonacionEliminada;
+import com.donaciones.gestion.model.Donante;
+import com.donaciones.gestion.model.EstadoEnvio;
+import com.donaciones.gestion.model.EstadoRevision;
+import com.donaciones.gestion.model.GestionDonacion;
+import com.donaciones.gestion.model.Inventario;
+
 import com.donaciones.gestion.repository.DonacionEliminadaRepository;
 import com.donaciones.gestion.repository.DonanteRepository;
 import com.donaciones.gestion.repository.GestionDonacionRepository;
 import com.donaciones.gestion.repository.InventarioRepository;
-import com.donaciones.gestion.repository.TalleresRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import jakarta.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.time.LocalDateTime;
+import com.donaciones.gestion.dto.AcopioDTO;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Service
 public class DonacionService {
 
-    @Autowired
-    private GestionDonacionRepository donacionRepository;
+    private final DonanteRepository donanteRepository;
+    private final GestionDonacionRepository gestionDonacionRepository;
+    private final InventarioRepository inventarioRepository;
+    private final DonacionEliminadaRepository donacionEliminadaRepository;
 
-    @Autowired
-    private InventarioRepository inventarioRepository;
+    private final RestTemplate restTemplate = new RestTemplate();
 
-    @Autowired
-    private DonacionEliminadaRepository eliminadaRepository;
+    @Value("${admin.talleres.articulos.url:http://localhost:8081/api/articulos-requeridos}")
+    private String adminTalleresArticulosUrl;
 
-    @Autowired
-    private DonanteRepository donanteRepository;
-
-    @Autowired
-    private TalleresRepository talleresRepository;
-
-    // ----------------------------------------------------------------
-    // MÉTODO PRIVADO: Upsert del Donante
-    // Busca el donante por RUT; si no existe lo crea.
-    // Si ya existe, actualiza su teléfono si llega uno nuevo.
-    // ----------------------------------------------------------------
-    private Donante resolverDonante(String rut, String nombre, String telefono) {
-        Optional<Donante> optDonante = donanteRepository.findById(rut);
-
-        if (optDonante.isPresent()) {
-            Donante existente = optDonante.get();
-            // Actualiza el teléfono si viene uno nuevo y no está vacío
-            if (telefono != null && !telefono.isBlank()) {
-                existente.setTelefono(telefono);
-            }
-            return donanteRepository.save(existente);
-        } else {
-            Donante nuevo = Donante.builder()
-                    .rut(rut)
-                    .nombre(nombre != null ? nombre : "Sin nombre")
-                    .telefono(telefono)
-                    .build();
-            return donanteRepository.save(nuevo);
-        }
+    public DonacionService(
+            DonanteRepository donanteRepository,
+            GestionDonacionRepository gestionDonacionRepository,
+            InventarioRepository inventarioRepository,
+            DonacionEliminadaRepository donacionEliminadaRepository
+    ) {
+        this.donanteRepository = donanteRepository;
+        this.gestionDonacionRepository = gestionDonacionRepository;
+        this.inventarioRepository = inventarioRepository;
+        this.donacionEliminadaRepository = donacionEliminadaRepository;
     }
 
-    // ----------------------------------------------------------------
-    // LISTADOS
-    // ----------------------------------------------------------------
-
-    public List<GestionDonacion> listarSolicitudesPendientes() {
-        return donacionRepository.findByEstadoRevision(EstadoRevision.PENDIENTE_REVISION);
-    }
-
-    public List<GestionDonacion> listarDonacionesAceptadas() {
-        return donacionRepository.findByEstadoRevision(EstadoRevision.ACEPTADA);
-    }
-
-    public List<DonacionEliminada> listarHistorialEliminadas() {
-        return eliminadaRepository.findAllByOrderByFechaEliminacionDesc();
-    }
-
-    public List<Talleres> listarTalleres() {
-        return talleresRepository.findAll();
-    }
-
-    // ----------------------------------------------------------------
-    // CREAR SOLICITUD (flujo normal desde el frontend / APK)
-    // ----------------------------------------------------------------
+    // =========================================================
+    // VECINOS / DONANTES
+    // =========================================================
 
     @Transactional
-    public GestionDonacion crearSolicitudDonacion(DonacionRequestDTO dto) {
-        Donante donante = resolverDonante(
-                dto.getRutDonante(),
-                dto.getNombreDonante(),
-                dto.getTelefonoDonante()
+    public Donante registrarVecino(VecinoRegistroDTO dto) {
+    String rutNormalizado = normalizarRut(dto.getRut());
+
+    if (rutNormalizado == null || rutNormalizado.isBlank()) {
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "El RUT es obligatorio"
         );
-
-        GestionDonacion donacion = GestionDonacion.builder()
-                .donante(donante)
-                .objetoADonar(dto.getObjetoADonar())
-                .cantidad(dto.getCantidad())
-                .descripcion(dto.getDescripcion())
-                .estadoRevision(EstadoRevision.PENDIENTE_REVISION)
-                .build();
-
-        return donacionRepository.save(donacion);
     }
+
+    Donante donante = donanteRepository.findByRut(rutNormalizado)
+            .orElseGet(() -> donanteRepository.findByRut(dto.getRut()).orElse(new Donante()));
+
+    donante.setRut(rutNormalizado);
+
+    String nombreCompleto = obtenerNombreCompletoRegistro(dto);
+
+    if (!nombreCompleto.isBlank()) {
+        String[] partes = nombreCompleto.split(" ", 2);
+
+        donante.setNombre(partes[0]);
+
+        if (partes.length > 1) {
+            donante.setApellido(partes[1]);
+        } else if (dto.getApellido() != null && !dto.getApellido().isBlank()) {
+            donante.setApellido(dto.getApellido().trim());
+        }
+    } else if (donante.getNombre() == null || donante.getNombre().isBlank()) {
+        donante.setNombre("Vecino");
+    }
+
+    donante.setCorreo(primerTexto(dto.getCorreo(), dto.getEmail(), donante.getCorreo()));
+    donante.setTelefono(primerTexto(dto.getTelefono(), donante.getTelefono()));
+    donante.setDireccion(primerTexto(dto.getDireccion(), donante.getDireccion()));
+
+    // Sector eliminado del registro.
+    donante.setSector(null);
+
+    return donanteRepository.save(donante);
+}
+
+    @Transactional
+    public Donante registrarVecino(ApkRequestDTO dto) {
+        return resolverDonanteApk(dto);
+    }
+
+    public Donante buscarVecinoPorRut(String rut) {
+        String rutNormalizado = normalizarRut(rut);
+    
+        return donanteRepository.findByRut(rutNormalizado)
+                .orElseGet(() -> donanteRepository.findByRut(rut).orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Vecino no encontrado"
+                )));
+    }
+
+    private Donante resolverDonanteApk(ApkRequestDTO dto) {
+        String rutNormalizado = normalizarRut(dto.getRutDonante());
+    
+        if (rutNormalizado == null || rutNormalizado.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "El RUT del donante es obligatorio"
+            );
+        }
+    
+        Donante donante = donanteRepository.findByRut(rutNormalizado)
+                .orElseGet(() -> donanteRepository.findByRut(dto.getRutDonante()).orElse(new Donante()));
+    
+        donante.setRut(rutNormalizado);
+    
+        String nombreCompleto = dto.getNombreDonante() == null
+                ? ""
+                : dto.getNombreDonante().trim();
+    
+        if (!nombreCompleto.isBlank()) {
+            String[] partes = nombreCompleto.split(" ", 2);
+    
+            donante.setNombre(partes[0]);
+    
+            if (partes.length > 1) {
+                donante.setApellido(partes[1]);
+            }
+        } else if (donante.getNombre() == null || donante.getNombre().isBlank()) {
+            donante.setNombre("Vecino");
+        }
+    
+        if (dto.getTelefonoDonante() != null) {
+            donante.setTelefono(dto.getTelefonoDonante());
+        }
+    
+        if (dto.getCorreoDonante() != null) {
+            donante.setCorreo(dto.getCorreoDonante());
+        }
+    
+        if (dto.getDireccionDonante() != null) {
+            donante.setDireccion(dto.getDireccionDonante());
+        }
+    
+        // Sector eliminado del flujo de donante.
+        donante.setSector(null);
+    
+        return donanteRepository.save(donante);
+    }
+
+    // =========================================================
+    // SOLICITUDES DESDE APK DONANTE
+    // =========================================================
 
     @Transactional
     public GestionDonacion recibirDonacionApk(ApkRequestDTO dto) {
-        // La APK solo envía RUT, sin nombre ni teléfono
-        Donante donante = resolverDonante(dto.getRutDonante(), null, null);
+        resolverDonanteApk(dto);
 
-        // REGLA DE NEGOCIO: toda donación desde APK llega EN_CAMINO
-        GestionDonacion donacion = GestionDonacion.builder()
-                .donante(donante)
-                .objetoADonar(dto.getArticulo())
-                .cantidad(1)
-                .descripcion("Enviado desde APK Móvil")
-                .estadoRevision(EstadoRevision.PENDIENTE_REVISION)
-                .estadoEnvio(EstadoEnvio.EN_CAMINO)
-                .build();
+        String articulo = obtenerArticuloDesdeDto(dto);
 
-        return donacionRepository.save(donacion);
+        if (articulo == null || articulo.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "El artículo u objeto a donar es obligatorio"
+            );
+        }
+
+        GestionDonacion donacion = new GestionDonacion();
+
+        donacion.setRutDonante(normalizarRut(dto.getRutDonante()));
+        donacion.setNombreDonante(dto.getNombreDonante());
+        donacion.setTelefonoDonante(dto.getTelefonoDonante());
+        donacion.setCorreoDonante(dto.getCorreoDonante());
+        donacion.setDireccionDonante(dto.getDireccionDonante());
+        donacion.setSectorDonante(null);
+
+        donacion.setObjetoADonar(articulo);
+        donacion.setCantidad(dto.getCantidad() != null ? dto.getCantidad() : 1);
+        donacion.setDescripcion(dto.getDescripcion());
+
+        donacion.setCodigoTaller(dto.getCodigoTaller());
+        donacion.setNombreTaller(dto.getNombreTaller());
+
+        donacion.setEstadoRevision(EstadoRevision.PENDIENTE_REVISION);
+        donacion.setEstadoEnvio(EstadoEnvio.EN_CAMINO);
+        donacion.setDestino(DestinoDonacion.TALLER);
+
+        return gestionDonacionRepository.save(donacion);
     }
 
-    // ----------------------------------------------------------------
-    // REVISIÓN (Aceptar / Rechazar solicitud)
-    // ----------------------------------------------------------------
+    public List<GestionDonacion> listarSolicitudesPendientes() {
+        return gestionDonacionRepository.findByEstadoRevision(
+                EstadoRevision.PENDIENTE_REVISION
+        );
+    }
+
+    public List<GestionDonacion> listarMisSolicitudes(String rut) {
+        return gestionDonacionRepository.findByRutDonanteOrderByIdDesc(normalizarRut(rut));
+    }
+
+    // =========================================================
+    // ACEPTAR / RECHAZAR SOLICITUDES
+    // =========================================================
 
     @Transactional
     public GestionDonacion procesarRevision(Long id, RevisionDTO dto) {
-        GestionDonacion donacion = donacionRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Donación no encontrada"));
+        GestionDonacion donacion = gestionDonacionRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Solicitud no encontrada"
+                ));
 
-        if (!donacion.getEstadoRevision().equals(EstadoRevision.PENDIENTE_REVISION)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La donación ya fue revisada");
+        if (donacion.getEstadoRevision() == EstadoRevision.ACEPTADA) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Esta solicitud ya fue aceptada"
+            );
         }
 
-        if (dto.getAceptar()) {
+        if (donacion.getEstadoRevision() == EstadoRevision.RECHAZADA) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Esta solicitud ya fue rechazada"
+            );
+        }
+
+        if (Boolean.TRUE.equals(dto.getAceptar())) {
+
+            // Ahora aceptar NO manda al inventario.
+            // Solo deja la donación lista para confirmar llegada al punto de acopio.
             donacion.setEstadoRevision(EstadoRevision.ACEPTADA);
-            donacion.setDestino(dto.getDestino());
-            donacion.setEstadoEnvio(dto.getEstadoEnvio());
+            donacion.setEstadoEnvio(EstadoEnvio.EN_CAMINO);
 
-            GestionDonacion guardada = donacionRepository.save(donacion);
-
-            if (dto.getDestino() == DestinoDonacion.INVENTARIO) {
-                Inventario inv = Inventario.builder()
-                        .gestionDonacion(guardada)
-                        .cantidad(guardada.getCantidad())
-                        .objeto(guardada.getObjetoADonar())
-                        .descripcion(guardada.getDescripcion())
-                        .build();
-                inventarioRepository.save(inv);
-            }
-            return guardada;
         } else {
+
+            // Si se rechaza desde solicitudes, no pasa al punto de acopio.
             donacion.setEstadoRevision(EstadoRevision.RECHAZADA);
-            donacion.setMotivoRechazo(dto.getMotivoRechazo());
-            return donacionRepository.save(donacion);
+            donacion.setEstadoEnvio(EstadoEnvio.NO_LLEGO);
         }
+
+        return gestionDonacionRepository.save(donacion);
     }
 
-    // ----------------------------------------------------------------
-    // INGRESO MANUAL (desde el modal "Agregar Donación Manual")
-    // ----------------------------------------------------------------
-
-    @Transactional
-    public GestionDonacion ingresoManualInventario(DonacionRequestDTO dto, DestinoDonacion destino, EstadoEnvio estadoEnvio, Long codigoTaller) {
-        Donante donante = resolverDonante(
-                dto.getRutDonante(),
-                dto.getNombreDonante(),
-                dto.getTelefonoDonante()
+    public List<GestionDonacion> listarPendientesAcopio() {
+        return gestionDonacionRepository.findByEstadoRevisionAndEstadoEnvio(
+                EstadoRevision.ACEPTADA,
+                EstadoEnvio.EN_CAMINO
         );
-
-        // Buscar el taller si se proporcionó un código
-        Talleres taller = null;
-        if (codigoTaller != null) {
-            taller = talleresRepository.findById(codigoTaller)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Taller no encontrado con código: " + codigoTaller));
+    }
+    
+    @Transactional
+    public GestionDonacion confirmarAcopio(Long id, AcopioDTO dto) {
+        GestionDonacion donacion = gestionDonacionRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Solicitud no encontrada"
+                ));
+    
+        if (donacion.getEstadoRevision() != EstadoRevision.ACEPTADA) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Solo se puede confirmar una solicitud aceptada"
+            );
         }
-
-        GestionDonacion donacion = GestionDonacion.builder()
-                .donante(donante)
-                .objetoADonar(dto.getObjetoADonar())
-                .cantidad(dto.getCantidad())
-                .descripcion(dto.getDescripcion())
-                .estadoRevision(EstadoRevision.ACEPTADA)
-                .destino(destino)
-                .estadoEnvio(estadoEnvio)
-                .taller(taller)
-                .build();
-
-        GestionDonacion guardada = donacionRepository.save(donacion);
-
-        if (destino == DestinoDonacion.INVENTARIO) {
-            Inventario inv = Inventario.builder()
-                    .gestionDonacion(guardada)
-                    .cantidad(guardada.getCantidad())
-                    .objeto(guardada.getObjetoADonar())
-                    .descripcion(guardada.getDescripcion())
-                    .build();
-            inventarioRepository.save(inv);
+    
+        if (donacion.getEstadoEnvio() != EstadoEnvio.EN_CAMINO) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Esta solicitud ya fue procesada en el punto de acopio"
+            );
         }
-
-        return guardada;
+    
+        if (Boolean.TRUE.equals(dto.getLlego())) {
+    
+            donacion.setEstadoEnvio(EstadoEnvio.LLEGO);
+    
+            // Recién aquí pasa al inventario.
+            guardarSolicitudAceptadaEnInventario(donacion);
+    
+            // Recién aquí se actualiza lo recibido para el taller.
+            avisarRecepcionArticuloATaller(donacion);
+    
+        } else {
+    
+            // No llegó al punto de acopio, por tanto NO pasa al inventario.
+            donacion.setEstadoEnvio(EstadoEnvio.NO_LLEGO);
+        }
+    
+        return gestionDonacionRepository.save(donacion);
     }
 
-    // ----------------------------------------------------------------
-    // EDITAR INVENTARIO
-    // ----------------------------------------------------------------
+    private void guardarSolicitudAceptadaEnInventario(GestionDonacion donacion) {
+        Inventario inventario = new Inventario();
+
+        inventario.setRutDonante(normalizarRut(donacion.getRutDonante()));
+        inventario.setNombreDonante(donacion.getNombreDonante());
+        inventario.setTelefonoDonante(donacion.getTelefonoDonante());
+        inventario.setCorreoDonante(donacion.getCorreoDonante());
+        inventario.setDireccionDonante(donacion.getDireccionDonante());
+        inventario.setSectorDonante(null);
+
+        inventario.setArticulo(donacion.getObjetoADonar());
+        inventario.setCantidad(donacion.getCantidad() != null ? donacion.getCantidad() : 1);
+        inventario.setDescripcion(donacion.getDescripcion());
+
+        inventario.setEstadoEnvio(EstadoEnvio.LLEGO);
+
+        inventario.setCodigoTaller(donacion.getCodigoTaller());
+        inventario.setNombreTaller(donacion.getNombreTaller());
+
+        inventarioRepository.save(inventario);
+    }
+
+    // =========================================================
+    // INVENTARIO
+    // =========================================================
+
+    public List<Inventario> listarInventario() {
+        return inventarioRepository.findAllByOrderByFechaIngresoDesc();
+    }
 
     @Transactional
-    public GestionDonacion editarInventario(Long id, EdicionInventarioDTO dto) {
-        GestionDonacion donacion = donacionRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Donación no encontrada"));
+    public Inventario crearDonacionManualInventario(ApkRequestDTO dto) {
+        resolverDonanteApk(dto);
 
-        donacion.setCantidad(dto.getCantidad());
-        donacion.setEstadoEnvio(dto.getEstadoEnvio());
+        String articulo = obtenerArticuloDesdeDto(dto);
 
-        if (donacion.getDestino() == DestinoDonacion.INVENTARIO) {
-            Optional<Inventario> optInv = inventarioRepository.findById(id);
-            if (optInv.isPresent()) {
-                Inventario inv = optInv.get();
-                inv.setCantidad(dto.getCantidad());
-                inventarioRepository.save(inv);
+        if (articulo == null || articulo.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "El artículo u objeto es obligatorio"
+            );
+        }
+
+        Inventario inventario = new Inventario();
+
+        inventario.setRutDonante(normalizarRut(dto.getRutDonante()));
+        inventario.setNombreDonante(dto.getNombreDonante());
+        inventario.setTelefonoDonante(dto.getTelefonoDonante());
+        inventario.setCorreoDonante(dto.getCorreoDonante());
+        inventario.setDireccionDonante(dto.getDireccionDonante());
+        inventario.setSectorDonante(null);
+
+        inventario.setArticulo(articulo);
+        inventario.setCantidad(dto.getCantidad() != null ? dto.getCantidad() : 1);
+        inventario.setDescripcion(dto.getDescripcion());
+        inventario.setEstadoEnvio(EstadoEnvio.LLEGO);
+
+        inventario.setCodigoTaller(dto.getCodigoTaller());
+        inventario.setNombreTaller(dto.getNombreTaller());
+
+        Inventario inventarioGuardado = inventarioRepository.save(inventario);
+
+        avisarRecepcionArticuloATaller(dto);
+
+        return inventarioGuardado;
+    }
+
+    @Transactional
+    public void eliminarInventario(Long id, EliminacionInventarioDTO dto) {
+        Inventario inventario = inventarioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Donación de inventario no encontrada"
+                ));
+
+        String motivo = dto != null ? dto.getMotivoEliminacion() : null;
+
+        if (motivo == null || motivo.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Debe ingresar un motivo de eliminación"
+            );
+        }
+
+        DonacionEliminada eliminada = new DonacionEliminada();
+
+        eliminada.setIdDonacionOriginal(inventario.getId());
+        eliminada.setArticulo(inventario.getArticulo());
+        eliminada.setCantidad(inventario.getCantidad());
+        eliminada.setMotivoEliminacion(motivo);
+
+        donacionEliminadaRepository.save(eliminada);
+
+        avisarDescuentoArticuloATaller(inventario);
+
+        inventarioRepository.delete(inventario);
+    }
+
+    // =========================================================
+    // HISTORIAL
+    // =========================================================
+
+    public List<DonacionEliminada> listarHistorialEliminadas() {
+        return donacionEliminadaRepository.findAllByOrderByFechaEliminacionDesc();
+    }
+
+    // =========================================================
+    // COMUNICACIÓN CON ADMIN_TALLERES
+    // =========================================================
+
+    private void avisarRecepcionArticuloATaller(GestionDonacion donacion) {
+        if (donacion.getCodigoTaller() == null) {
+            return;
+        }
+
+        if (donacion.getObjetoADonar() == null || donacion.getObjetoADonar().isBlank()) {
+            return;
+        }
+
+        Integer cantidad = donacion.getCantidad();
+
+        if (cantidad == null || cantidad <= 0) {
+            cantidad = 1;
+        }
+
+        String url = adminTalleresArticulosUrl
+                + "/taller/"
+                + donacion.getCodigoTaller()
+                + "/recibir";
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("nombreArticulo", donacion.getObjetoADonar());
+        body.put("cantidad", cantidad);
+
+        try {
+            restTemplate.postForObject(url, body, Object.class);
+        } catch (Exception error) {
+            System.out.println("No se pudo actualizar artículo requerido en admin_talleres: " + error.getMessage());
+        }
+    }
+
+    private void avisarRecepcionArticuloATaller(ApkRequestDTO dto) {
+        if (dto.getCodigoTaller() == null) {
+            return;
+        }
+
+        String nombreArticulo = obtenerArticuloDesdeDto(dto);
+
+        if (nombreArticulo == null || nombreArticulo.isBlank()) {
+            return;
+        }
+
+        Integer cantidad = dto.getCantidad();
+
+        if (cantidad == null || cantidad <= 0) {
+            cantidad = 1;
+        }
+
+        String url = adminTalleresArticulosUrl
+                + "/taller/"
+                + dto.getCodigoTaller()
+                + "/recibir";
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("nombreArticulo", nombreArticulo);
+        body.put("cantidad", cantidad);
+
+        try {
+            restTemplate.postForObject(url, body, Object.class);
+        } catch (Exception error) {
+            System.out.println("No se pudo actualizar artículo requerido en admin_talleres: " + error.getMessage());
+        }
+    }
+
+    private void avisarDescuentoArticuloATaller(Inventario inventario) {
+        if (inventario.getCodigoTaller() == null) {
+            return;
+        }
+
+        if (inventario.getArticulo() == null || inventario.getArticulo().isBlank()) {
+            return;
+        }
+
+        Integer cantidad = inventario.getCantidad();
+
+        if (cantidad == null || cantidad <= 0) {
+            cantidad = 1;
+        }
+
+        String url = adminTalleresArticulosUrl
+                + "/taller/"
+                + inventario.getCodigoTaller()
+                + "/descontar";
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("nombreArticulo", inventario.getArticulo());
+        body.put("cantidad", cantidad);
+
+        try {
+            restTemplate.postForObject(url, body, Object.class);
+        } catch (Exception error) {
+            System.out.println("No se pudo descontar artículo en admin_talleres: " + error.getMessage());
+        }
+    }
+
+    // =========================================================
+    // UTILIDADES
+    // =========================================================
+
+    private String obtenerArticuloDesdeDto(ApkRequestDTO dto) {
+        String articulo = dto.getArticulo();
+
+        if (articulo == null || articulo.isBlank()) {
+            articulo = dto.getObjeto();
+        }
+
+        return articulo;
+    }
+    private String normalizarRut(String rut) {
+        if (rut == null) {
+            return null;
+        }
+    
+        String limpio = rut.trim()
+                .replace(".", "")
+                .replace(" ", "")
+                .toUpperCase();
+    
+        if (limpio.isBlank()) {
+            return null;
+        }
+    
+        if (limpio.contains("-")) {
+            String[] partes = limpio.split("-");
+            if (partes.length >= 2) {
+                String cuerpo = partes[0].replace("-", "");
+                String dv = partes[1];
+                return cuerpo + "-" + dv;
             }
         }
-        return donacionRepository.save(donacion);
-    }
-
-    // ----------------------------------------------------------------
-    // ELIMINAR DONACIÓN
-    // ----------------------------------------------------------------
-
-    @Transactional
-    public void eliminarDonacion(Long id, EliminacionDTO dto) {
-        GestionDonacion donacion = donacionRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Donación no encontrada"));
-
-        DonacionEliminada eliminada = DonacionEliminada.builder()
-                .idDonacionOriginal(donacion.getId())
-                .articulo(donacion.getObjetoADonar())
-                .cantidad(donacion.getCantidad())
-                .motivoEliminacion(dto.getJustificacion())
-                .fechaEliminacion(LocalDateTime.now())
-                .build();
-        eliminadaRepository.save(eliminada);
-
-        // Borramos el inventario asociado manualmente antes de la donación (shared PK)
-        if (donacion.getDestino() == DestinoDonacion.INVENTARIO) {
-            inventarioRepository.deleteById(id);
+    
+        if (limpio.length() > 1) {
+            String cuerpo = limpio.substring(0, limpio.length() - 1);
+            String dv = limpio.substring(limpio.length() - 1);
+            return cuerpo + "-" + dv;
         }
-        donacionRepository.delete(donacion);
+    
+        return limpio;
+    }
+    
+    private String primerTexto(String... valores) {
+        if (valores == null) {
+            return null;
+        }
+    
+        for (String valor : valores) {
+            if (valor != null && !valor.trim().isBlank()) {
+                return valor.trim();
+            }
+        }
+    
+        return null;
+    }
+    
+    private String obtenerNombreCompletoRegistro(VecinoRegistroDTO dto) {
+        String nombreCompleto = primerTexto(dto.getNombreCompleto());
+    
+        if (nombreCompleto != null) {
+            return nombreCompleto;
+        }
+    
+        String nombre = primerTexto(dto.getNombre());
+        String apellido = primerTexto(dto.getApellido());
+    
+        if (nombre == null && apellido == null) {
+            return "";
+        }
+    
+        if (apellido == null) {
+            return nombre;
+        }
+    
+        if (nombre == null) {
+            return apellido;
+        }
+    
+        return nombre + " " + apellido;
     }
 }

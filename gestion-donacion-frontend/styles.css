@@ -45,3 +45,48 @@ body {
 #sidebar {
     transition: transform 0.3s ease-in-out;
 }
+.btn-cerrar-sesion {
+    width: calc(100% - 24px);
+    margin: 16px 12px;
+    border: none;
+    border-radius: 12px;
+    background: #ef4444;
+    color: white;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  
+  .btn-cerrar-sesion:hover {
+    background: #dc2626;
+  }
+  /* FORZAR BOTÓN CERRAR SESIÓN ABAJO DEL SIDEBAR */
+.btn-cerrar-sesion-fijo {
+    position: fixed !important;
+    left: 16px !important;
+    bottom: 24px !important;
+    width: 224px !important;
+
+    border: none !important;
+    border-radius: 14px !important;
+    background: #dc2626 !important;
+    color: white !important;
+
+    padding: 15px 16px !important;
+    font-size: 16px !important;
+    font-weight: 900 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+
+    cursor: pointer !important;
+    box-shadow: 0 8px 16px rgba(220, 38, 38, 0.25) !important;
+    z-index: 9999 !important;
+}
+
+.btn-cerrar-sesion-fijo:hover {
+    background: #b91c1c !important;
+}

@@ -1,43 +1,132 @@
+const API_BASE_URL = 'http://localhost:8083/api/v1/gestion';
+
 document.addEventListener('DOMContentLoaded', () => {
-    loadHistorial();
+    cargarHistorial();
 });
 
-async function loadHistorial() {
-    const tbody = document.getElementById('historialTableBody');
-    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-gray-500"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Cargando...</td></tr>';
-    
+async function cargarHistorial() {
+    const tabla = document.getElementById('tablaHistorial');
+
+    if (!tabla) {
+        console.error('No existe el tbody con id tablaHistorial');
+        return;
+    }
+
+    tabla.innerHTML = `
+        <tr>
+            <td colspan="5" class="text-center py-6 text-gray-500">
+                Cargando historial...
+            </td>
+        </tr>
+    `;
+
     try {
-        const data = await apiCall('/historial');
-        tbody.innerHTML = '';
-        
-        if (data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-gray-500">No hay registros de eliminaciones.</td></tr>';
+        const response = await fetch(`${API_BASE_URL}/historial`);
+
+        if (!response.ok) {
+            const errorTexto = await response.text();
+            throw new Error(`Error HTTP ${response.status}: ${errorTexto}`);
+        }
+
+        const historial = await response.json();
+
+        tabla.innerHTML = '';
+
+        if (!historial || historial.length === 0) {
+            tabla.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center py-6 text-gray-500">
+                        No hay donaciones eliminadas registradas.
+                    </td>
+                </tr>
+            `;
             return;
         }
 
-        data.forEach(item => {
-            const tr = document.createElement('tr');
-            tr.className = 'hover:bg-gray-50 transition-colors';
-            
-            const dateStr = new Date(item.fechaEliminacion).toLocaleString('es-ES', { 
-                day: '2-digit', month: '2-digit', year: 'numeric', 
-                hour: '2-digit', minute: '2-digit' 
-            });
+        historial.forEach(item => {
+            const fila = document.createElement('tr');
+            fila.className = 'border-b hover:bg-gray-50';
 
-            tr.innerHTML = `
-                <td class="py-3 px-6 text-sm text-gray-900 font-medium text-center">#${item.idDonacionOriginal}</td>
-                <td class="py-3 px-6 text-sm text-gray-800 font-medium">${item.articulo}</td>
-                <td class="py-3 px-6 text-sm text-gray-600">
-                    <span class="bg-gray-100 text-gray-800 py-1 px-2 rounded-full text-xs font-semibold">
-                        ${item.cantidad}
-                    </span>
+            const idOriginal =
+                item.idDonacionOriginal ||
+                item.id_donacion_original ||
+                'Sin ID';
+
+            const articulo =
+                item.articulo ||
+                item.objeto ||
+                'Sin artículo';
+
+            const cantidad =
+                item.cantidad || 0;
+
+            const motivo =
+                item.motivoEliminacion ||
+                item.motivo_eliminacion ||
+                'Sin motivo registrado';
+
+            const fecha =
+                formatearFecha(item.fechaEliminacion || item.fecha_eliminacion);
+
+            fila.innerHTML = `
+                <td class="px-6 py-4 text-gray-800 font-medium">
+                    ${idOriginal}
                 </td>
-                <td class="py-3 px-6 text-sm text-red-600 italic">"${item.motivoEliminacion}"</td>
-                <td class="py-3 px-6 text-sm text-gray-500"><i class="fa-regular fa-calendar mr-1"></i>${dateStr}</td>
+
+                <td class="px-6 py-4 text-gray-700 font-semibold">
+                    ${articulo}
+                </td>
+
+                <td class="px-6 py-4 text-gray-700">
+                    ${cantidad}
+                </td>
+
+                <td class="px-6 py-4 text-gray-700">
+                    ${motivo}
+                </td>
+
+                <td class="px-6 py-4 text-gray-700">
+                    ${fecha}
+                </td>
             `;
-            tbody.appendChild(tr);
+
+            tabla.appendChild(fila);
         });
+
     } catch (error) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-red-500">Error al cargar historial.</td></tr>';
+        console.error('Error al cargar historial:', error);
+
+        tabla.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center py-6 text-red-500">
+                    Error al cargar historial: ${error.message}
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function formatearFecha(fecha) {
+    if (!fecha) {
+        return 'Sin fecha';
+    }
+
+    try {
+        const date = new Date(fecha);
+
+        if (isNaN(date.getTime())) {
+            return fecha;
+        }
+
+        return date.toLocaleString('es-CL', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+    } catch (error) {
+        return fecha;
     }
 }

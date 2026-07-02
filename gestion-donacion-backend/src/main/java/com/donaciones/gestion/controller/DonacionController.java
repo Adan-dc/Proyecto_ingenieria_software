@@ -1,15 +1,23 @@
 package com.donaciones.gestion.controller;
 
+import com.donaciones.gestion.dto.AcopioDTO;
 import com.donaciones.gestion.dto.ApkRequestDTO;
+import com.donaciones.gestion.dto.EliminacionInventarioDTO;
+import com.donaciones.gestion.dto.NotificacionTokenDTO;
 import com.donaciones.gestion.dto.RevisionDTO;
+import com.donaciones.gestion.dto.RetiroInventarioDTO;
 import com.donaciones.gestion.dto.VecinoRegistroDTO;
+
+import com.donaciones.gestion.model.DispositivoNotificacion;
+import com.donaciones.gestion.model.DonacionEliminada;
 import com.donaciones.gestion.model.Donante;
 import com.donaciones.gestion.model.GestionDonacion;
-import com.donaciones.gestion.service.DonacionService;
-import com.donaciones.gestion.dto.EliminacionInventarioDTO;
-import com.donaciones.gestion.model.DonacionEliminada;
 import com.donaciones.gestion.model.Inventario;
-import com.donaciones.gestion.dto.AcopioDTO;
+import com.donaciones.gestion.model.RetiroInventario;
+
+import com.donaciones.gestion.service.DonacionService;
+import com.donaciones.gestion.service.NotificacionPushService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +29,14 @@ import java.util.List;
 public class DonacionController {
 
     private final DonacionService donacionService;
+    private final NotificacionPushService notificacionPushService;
 
-    public DonacionController(DonacionService donacionService) {
+    public DonacionController(
+            DonacionService donacionService,
+            NotificacionPushService notificacionPushService
+    ) {
         this.donacionService = donacionService;
+        this.notificacionPushService = notificacionPushService;
     }
 
     @PostMapping("/vecinos/registro")
@@ -34,6 +47,13 @@ public class DonacionController {
     @GetMapping("/vecinos/{rut}")
     public ResponseEntity<Donante> buscarVecinoPorRut(@PathVariable String rut) {
         return ResponseEntity.ok(donacionService.buscarVecinoPorRut(rut));
+    }
+
+    @PostMapping("/notificaciones/token")
+    public ResponseEntity<DispositivoNotificacion> registrarTokenNotificacion(
+            @RequestBody NotificacionTokenDTO dto
+    ) {
+        return ResponseEntity.ok(notificacionPushService.registrarToken(dto));
     }
 
     @PostMapping("/apk/donacion")
@@ -63,7 +83,7 @@ public class DonacionController {
     ) {
         return ResponseEntity.ok(donacionService.procesarRevision(id, dto));
     }
-    
+
     @GetMapping("/acopio/pendientes")
     public ResponseEntity<List<GestionDonacion>> listarPendientesAcopio() {
         return ResponseEntity.ok(donacionService.listarPendientesAcopio());
@@ -85,6 +105,20 @@ public class DonacionController {
     @GetMapping("/inventario")
     public ResponseEntity<List<Inventario>> listarInventario() {
         return ResponseEntity.ok(donacionService.listarInventario());
+    }
+
+
+    @PostMapping("/inventario/{id}/retiro")
+    public ResponseEntity<RetiroInventario> retirarInventario(
+            @PathVariable Long id,
+            @RequestBody RetiroInventarioDTO dto
+    ) {
+        return ResponseEntity.ok(donacionService.retirarInventario(id, dto));
+    }
+
+    @GetMapping("/inventario/retiros")
+    public ResponseEntity<List<RetiroInventario>> listarRetirosInventario() {
+        return ResponseEntity.ok(donacionService.listarRetirosInventario());
     }
 
     @DeleteMapping("/inventario/{id}")

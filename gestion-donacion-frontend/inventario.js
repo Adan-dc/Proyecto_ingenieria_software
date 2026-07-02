@@ -1,5 +1,7 @@
 const API_BASE_URL = 'http://localhost:8083/api/v1/gestion';
 
+let inventarioActual = [];
+
 document.addEventListener('DOMContentLoaded', () => {
     cargarInventario();
 
@@ -39,10 +41,11 @@ async function cargarInventario() {
         }
 
         const inventario = await response.json();
+        inventarioActual = Array.isArray(inventario) ? inventario : [];
 
         tabla.innerHTML = '';
 
-        if (!inventario || inventario.length === 0) {
+        if (!inventarioActual || inventarioActual.length === 0) {
             tabla.innerHTML = `
                 <tr>
                     <td colspan="8" class="text-center py-6 text-gray-500">
@@ -53,7 +56,7 @@ async function cargarInventario() {
             return;
         }
 
-        inventario.forEach(item => {
+        inventarioActual.forEach(item => {
             const fila = document.createElement('tr');
             fila.className = 'border-b hover:bg-gray-50';
 
@@ -70,7 +73,7 @@ async function cargarInventario() {
                 </td>
 
                 <td class="px-6 py-4 text-gray-700 font-semibold">
-                    ${articulo}
+                    ${escapeHtml(articulo)}
                 </td>
 
                 <td class="px-6 py-4 text-gray-700">
@@ -78,27 +81,35 @@ async function cargarInventario() {
                 </td>
 
                 <td class="px-6 py-4 text-gray-700">
-                    ${rut}
+                    ${escapeHtml(rut)}
                 </td>
 
                 <td class="px-6 py-4 text-gray-700">
-                    ${nombre}
+                    ${escapeHtml(nombre)}
                 </td>
 
                 <td class="px-6 py-4 text-gray-700">
-                    ${estado}
+                    ${escapeHtml(estado)}
                 </td>
 
                 <td class="px-6 py-4 text-gray-700">
-                    ${descripcion}
+                    ${escapeHtml(descripcion)}
                 </td>
 
                 <td class="px-6 py-4">
-                    <button
-                        onclick="eliminarDonacionInventario(${item.id})"
-                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm font-semibold">
-                        Eliminar
-                    </button>
+                    <div class="flex gap-2 flex-wrap">
+                        <button
+                            onclick="retirarDonacionInventario(${item.id})"
+                            class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-semibold">
+                            Retiro
+                        </button>
+
+                        <button
+                            onclick="eliminarDonacionInventario(${item.id})"
+                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm font-semibold">
+                            Eliminar
+                        </button>
+                    </div>
                 </td>
             `;
 
@@ -205,6 +216,75 @@ async function guardarDonacionManual(event) {
 }
 
 // ===============================
+// RETIRAR DONACIÓN DEL INVENTARIO
+// ===============================
+
+async function retirarDonacionInventario(id) {
+    const item = inventarioActual.find(donacion => Number(donacion.id) === Number(id));
+
+    const articulo = item?.articulo || item?.objeto || 'esta donación';
+    const tallerSugerido = item?.nombreTaller || '';
+
+    const confirmar = confirm(
+        '¿Confirmas que esta donación será retirada del inventario?\n\n' +
+        `Artículo: ${articulo}\n\n` +
+        'Esto la eliminará del inventario y guardará un respaldo en el historial de retiros.'
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    const retiradoPor = prompt('Ingrese el nombre de quien retira la donación:');
+
+    if (!retiradoPor || retiradoPor.trim() === '') {
+        alert('Debe ingresar quién retiró la donación.');
+        return;
+    }
+
+    const destinoRetiro = prompt(
+        'Ingrese el taller o destino del retiro:',
+        tallerSugerido
+    );
+
+    const justificacionRetiro = prompt(
+        'Ingrese la justificación del retiro:\n\nEjemplo: Retirado para ser usado en el taller.'
+    );
+
+    if (!justificacionRetiro || justificacionRetiro.trim() === '') {
+        alert('Debe ingresar una justificación para el retiro.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/inventario/${id}/retiro`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                retiradoPor: retiradoPor.trim(),
+                destinoRetiro: destinoRetiro ? destinoRetiro.trim() : '',
+                justificacionRetiro: justificacionRetiro.trim()
+            })
+        });
+
+        if (!response.ok) {
+            const errorTexto = await response.text();
+            throw new Error(`Error HTTP ${response.status}: ${errorTexto}`);
+        }
+
+        alert('Retiro registrado correctamente. La donación salió del inventario.');
+
+        cargarInventario();
+
+    } catch (error) {
+        console.error('Error al registrar retiro:', error);
+        alert(`No se pudo registrar el retiro.\n\n${error.message}`);
+    }
+}
+
+// ===============================
 // ELIMINAR DONACIÓN DEL INVENTARIO
 // ===============================
 
@@ -284,4 +364,13 @@ function limpiarCampo(...ids) {
             elemento.value = '';
         }
     }
+}
+
+function escapeHtml(texto) {
+    return String(texto)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
 }

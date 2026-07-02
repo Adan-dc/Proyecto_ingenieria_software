@@ -3,6 +3,7 @@ package com.donaciones.gestion.service;
 import com.donaciones.gestion.dto.ApkRequestDTO;
 import com.donaciones.gestion.dto.EliminacionInventarioDTO;
 import com.donaciones.gestion.dto.RevisionDTO;
+import com.donaciones.gestion.dto.RetiroInventarioDTO;
 import com.donaciones.gestion.dto.VecinoRegistroDTO;
 
 import com.donaciones.gestion.model.DestinoDonacion;
@@ -12,11 +13,13 @@ import com.donaciones.gestion.model.EstadoEnvio;
 import com.donaciones.gestion.model.EstadoRevision;
 import com.donaciones.gestion.model.GestionDonacion;
 import com.donaciones.gestion.model.Inventario;
+import com.donaciones.gestion.model.RetiroInventario;
 
 import com.donaciones.gestion.repository.DonacionEliminadaRepository;
 import com.donaciones.gestion.repository.DonanteRepository;
 import com.donaciones.gestion.repository.GestionDonacionRepository;
 import com.donaciones.gestion.repository.InventarioRepository;
+import com.donaciones.gestion.repository.RetiroInventarioRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -37,6 +40,8 @@ public class DonacionService {
     private final GestionDonacionRepository gestionDonacionRepository;
     private final InventarioRepository inventarioRepository;
     private final DonacionEliminadaRepository donacionEliminadaRepository;
+    private final RetiroInventarioRepository retiroInventarioRepository;
+    private final NotificacionPushService notificacionPushService;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -44,15 +49,19 @@ public class DonacionService {
     private String adminTalleresArticulosUrl;
 
     public DonacionService(
-            DonanteRepository donanteRepository,
-            GestionDonacionRepository gestionDonacionRepository,
-            InventarioRepository inventarioRepository,
-            DonacionEliminadaRepository donacionEliminadaRepository
+        DonanteRepository donanteRepository,
+        GestionDonacionRepository gestionDonacionRepository,
+        InventarioRepository inventarioRepository,
+        DonacionEliminadaRepository donacionEliminadaRepository,
+        RetiroInventarioRepository retiroInventarioRepository,
+        NotificacionPushService notificacionPushService
     ) {
         this.donanteRepository = donanteRepository;
         this.gestionDonacionRepository = gestionDonacionRepository;
         this.inventarioRepository = inventarioRepository;
         this.donacionEliminadaRepository = donacionEliminadaRepository;
+        this.retiroInventarioRepository = retiroInventarioRepository;
+        this.notificacionPushService = notificacionPushService;
     }
 
     // =========================================================
@@ -220,42 +229,49 @@ public class DonacionService {
     // =========================================================
 
     @Transactional
-    public GestionDonacion procesarRevision(Long id, RevisionDTO dto) {
-        GestionDonacion donacion = gestionDonacionRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Solicitud no encontrada"
-                ));
+public GestionDonacion procesarRevision(Long id, RevisionDTO dto) {
+    GestionDonacion donacion = gestionDonacionRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Solicitud no encontrada"
+            ));
 
-        if (donacion.getEstadoRevision() == EstadoRevision.ACEPTADA) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Esta solicitud ya fue aceptada"
-            );
-        }
+    if (donacion.getEstadoRevision() == EstadoRevision.ACEPTADA) {
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Esta solicitud ya fue aceptada"
+        );
+    }
 
-        if (donacion.getEstadoRevision() == EstadoRevision.RECHAZADA) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Esta solicitud ya fue rechazada"
-            );
-        }
+    if (donacion.getEstadoRevision() == EstadoRevision.RECHAZADA) {
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Esta solicitud ya fue rechazada"
+        );
+    }
 
-        if (Boolean.TRUE.equals(dto.getAceptar())) {
+    GestionDonacion donacionGuardada;
 
-            // Ahora aceptar NO manda al inventario.
-            // Solo deja la donación lista para confirmar llegada al punto de acopio.
-            donacion.setEstadoRevision(EstadoRevision.ACEPTADA);
-            donacion.setEstadoEnvio(EstadoEnvio.EN_CAMINO);
+    if (Boolean.TRUE.equals(dto.getAceptar())) {
 
-        } else {
+        donacion.setEstadoRevision(EstadoRevision.ACEPTADA);
+        donacion.setEstadoEnvio(EstadoEnvio.EN_CAMINO);
 
-            // Si se rechaza desde solicitudes, no pasa al punto de acopio.
-            donacion.setEstadoRevision(EstadoRevision.RECHAZADA);
-            donacion.setEstadoEnvio(EstadoEnvio.NO_LLEGO);
-        }
+        donacionGuardada = gestionDonacionRepository.save(donacion);
 
-        return gestionDonacionRepository.save(donacion);
+        notificacionPushService.notificarSolicitudAceptada(donacionGuardada);
+
+    } else {
+
+        donacion.setEstadoRevision(EstadoRevision.RECHAZADA);
+        donacion.setEstadoEnvio(EstadoEnvio.NO_LLEGO);
+
+        donacionGuardada = gestionDonacionRepository.save(donacion);
+
+        notificacionPushService.notificarSolicitudRechazada(donacionGuardada);
+    }
+
+        return donacionGuardada;
     }
 
     public List<GestionDonacion> listarPendientesAcopio() {
@@ -402,6 +418,65 @@ public class DonacionService {
         avisarDescuentoArticuloATaller(inventario);
 
         inventarioRepository.delete(inventario);
+    }
+
+
+    @Transactional
+    public RetiroInventario retirarInventario(Long id, RetiroInventarioDTO dto) {
+        Inventario inventario = inventarioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Donación de inventario no encontrada"
+                ));
+
+        String retiradoPor = dto != null ? dto.getRetiradoPor() : null;
+        String destinoRetiro = dto != null ? dto.getDestinoRetiro() : null;
+        String justificacion = dto != null ? dto.getJustificacionRetiro() : null;
+
+        if (retiradoPor == null || retiradoPor.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Debe ingresar quién retiró la donación"
+            );
+        }
+
+        if (justificacion == null || justificacion.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Debe ingresar una justificación del retiro"
+            );
+        }
+
+        RetiroInventario retiro = new RetiroInventario();
+
+        retiro.setIdInventarioOriginal(inventario.getId());
+        retiro.setArticulo(inventario.getArticulo());
+        retiro.setCantidad(inventario.getCantidad());
+        retiro.setRutDonante(inventario.getRutDonante());
+        retiro.setNombreDonante(inventario.getNombreDonante());
+        retiro.setCodigoTaller(inventario.getCodigoTaller());
+        retiro.setNombreTaller(inventario.getNombreTaller());
+        retiro.setRetiradoPor(retiradoPor.trim());
+        retiro.setDestinoRetiro(
+                destinoRetiro == null || destinoRetiro.isBlank()
+                        ? inventario.getNombreTaller()
+                        : destinoRetiro.trim()
+        );
+        retiro.setJustificacionRetiro(justificacion.trim());
+
+        RetiroInventario retiroGuardado = retiroInventarioRepository.save(retiro);
+
+        // Importante:
+        // Esto elimina la donación del inventario central, pero NO descuenta
+        // los artículos recibidos del taller. La donación sí llegó y ahora
+        // fue retirada para ser usada por el encargado.
+        inventarioRepository.delete(inventario);
+
+        return retiroGuardado;
+    }
+
+    public List<RetiroInventario> listarRetirosInventario() {
+        return retiroInventarioRepository.findAllByOrderByFechaRetiroDesc();
     }
 
     // =========================================================

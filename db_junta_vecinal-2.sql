@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 18-06-2026 a las 06:49:49
+-- Tiempo de generación: 03-07-2026 a las 00:17:22
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -75,6 +75,21 @@ INSERT INTO `comentario_taller` (`id`, `comentario`, `email_voluntario`, `estado
 (1, 'Muy buen taller, aprendí bastante.', 'gabriel@correo.cl', 'VISIBLE', '2026-06-08 17:43:27.000000', 'Gabriel González', 1, NULL, NULL),
 (4, 'Hola', 'matiasncabrera54@gmail.com', 'VISIBLE', '2026-06-08 18:49:10.000000', 'Matías cabrera ', 3, '2026-06-08 18:49:10.000000', 2),
 (6, 'Hola prueba 4', 'gabri.gonzalez@duoc.cl', 'VISIBLE', '2026-06-10 23:36:38.000000', 'Gabriel González ', 4, '2026-06-10 23:36:38.000000', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `dispositivo_notificacion`
+--
+
+CREATE TABLE `dispositivo_notificacion` (
+  `id` bigint(20) NOT NULL,
+  `rut_donante` varchar(20) DEFAULT NULL,
+  `token_fcm` varchar(1000) DEFAULT NULL,
+  `activo` tinyint(1) DEFAULT NULL,
+  `fecha_registro` datetime DEFAULT NULL,
+  `fecha_actualizacion` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -160,9 +175,10 @@ INSERT INTO `gestion_donacion` (`id`, `cantidad`, `codigo_taller`, `correo_donan
 (6, 1, 1, 'gab.gonzalez@duoc.cl', 'Están en buen estado', 'TALLER', 'Los Aramos', 'LLEGO', 'ACEPTADA', '2026-06-03 23:25:02.000000', 'Gabriel Gonzalez', 'Taller kinesiología', 'Bandas elasticas', '12345678-5', 'Sector Norte', '987654321'),
 (7, 1, 4, 'gab.gonzalez@duoc.cl', 'Prueba 1', 'TALLER', 'Los Aramos', 'NO_LLEGO', 'ACEPTADA', '2026-06-12 22:46:00.000000', 'Gabriel Gonzalez', 'Prueba 4', 'Hola', '12345678-5', NULL, '987654321'),
 (8, 1, 4, 'gab.gonzalez@duoc.cl', 'Hola', 'TALLER', 'Los Aramos', 'LLEGO', 'ACEPTADA', '2026-06-12 23:00:01.000000', 'Gabriel Gonzalez', 'Prueba 4', 'Hola', '12345678-5', NULL, '987654321'),
-(9, 1, 1, 'gab.gonzalez@duoc.cl', 'Prueba 3', 'TALLER', 'Los Aramos', 'EN_CAMINO', 'PENDIENTE_REVISION', '2026-06-12 23:04:09.000000', 'Gabriel Gonzalez', 'Taller kinesiología', 'Mancuernas de 1 o 2 kilos', '12345678-5', NULL, '987654321'),
+(9, 1, 1, 'gab.gonzalez@duoc.cl', 'Prueba 3', 'TALLER', 'Los Aramos', 'EN_CAMINO', 'ACEPTADA', '2026-06-12 23:04:09.000000', 'Gabriel Gonzalez', 'Taller kinesiología', 'Mancuernas de 1 o 2 kilos', '12345678-5', NULL, '987654321'),
 (10, 1, 4, 'gab.gonzalez@duoc.cl', 'Prueba 5', 'TALLER', 'Los Aramos', 'NO_LLEGO', 'ACEPTADA', '2026-06-12 23:16:36.000000', 'Gabriel Gonzalez', 'Prueba 4', 'Hola', '12345678-5', NULL, '987654321'),
-(11, 1, 1, 'gab.gonzalez@duoc.cl', 'estan en buen estado, sin ninguna imperfeccion', 'TALLER', 'Los Aramos', 'EN_CAMINO', 'PENDIENTE_REVISION', '2026-06-17 12:11:59.000000', 'Gabriel Gonzalez', 'Taller kinesiología', 'Mancuernas de 1 o 2 kilos', '12345678-5', NULL, '987654321');
+(11, 1, 1, 'gab.gonzalez@duoc.cl', 'estan en buen estado, sin ninguna imperfeccion', 'TALLER', 'Los Aramos', 'EN_CAMINO', 'ACEPTADA', '2026-06-17 12:11:59.000000', 'Gabriel Gonzalez', 'Taller kinesiología', 'Mancuernas de 1 o 2 kilos', '12345678-5', NULL, '987654321'),
+(12, 1, 4, 'gab.gonzalez@duoc.cl', 'Prueba 5', 'TALLER', 'Los Aramos', 'EN_CAMINO', 'PENDIENTE_REVISION', '2026-06-25 20:28:06.000000', 'Gabriel Gonzalez', 'Prueba 4', 'Hola', '12345678-5', NULL, '987654321');
 
 -- --------------------------------------------------------
 
@@ -223,8 +239,7 @@ CREATE TABLE `inventario` (
 INSERT INTO `inventario` (`id`, `objeto`, `cantidad`, `codigo_taller`, `correo_donante`, `descripcion`, `direccion_donante`, `estado_envio`, `fecha_ingreso`, `nombre_donante`, `nombre_taller`, `rut_donante`, `sector_donante`, `telefono_donante`) VALUES
 (5, 'Bandas elasticas', 1, 1, 'gabri.gonzalez@duoc.cl', 'Están en buen estado', 'Los átomos 123', 'LLEGO', '2026-05-31 22:59:47.000000', 'Gabriel González', 'Taller kinesiología', '12345678-9', 'Sector Norte', '987653212'),
 (6, 'Bandas elasticas', 1, 1, 'gab.gonzalez@duoc.cl', 'Están en buen estado', 'Los Aramos', 'LLEGO', '2026-06-03 23:25:58.000000', 'Gabriel Gonzalez', 'Taller kinesiología', '12345678-5', 'Sector Norte', '987654321'),
-(7, 'Bandas elasticas', 1, 1, 'gabri.gonzalez@duoc.cl', 'En buen estado', 'Los átomos 123', 'LLEGO', '2026-06-13 16:02:06.000000', 'Gabriel González', 'Taller kinesiología', '12345678-9', NULL, '987653212'),
-(8, 'Hola', 1, 4, 'gab.gonzalez@duoc.cl', 'Hola', 'Los Aramos', 'LLEGO', '2026-06-13 16:04:44.000000', 'Gabriel Gonzalez', 'Prueba 4', '12345678-5', NULL, '987654321');
+(7, 'Bandas elasticas', 1, 1, 'gabri.gonzalez@duoc.cl', 'En buen estado', 'Los átomos 123', 'LLEGO', '2026-06-13 16:02:06.000000', 'Gabriel González', 'Taller kinesiología', '12345678-9', NULL, '987653212');
 
 -- --------------------------------------------------------
 
@@ -247,6 +262,34 @@ CREATE TABLE `reportes` (
 
 INSERT INTO `reportes` (`id`, `detalle`, `estado`, `fecha_creacion`, `nombre_vecino`, `tipo_error`) VALUES
 (1, 'He intentado ingresar con mi correo pero dice que la contraseña es inválida. Ya pedí\n                        reinicio.', 'RESUELTO', '2026-05-31 21:06:24.000000', 'María Castro', 'No puede iniciar sesión');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `retiro_inventario`
+--
+
+CREATE TABLE `retiro_inventario` (
+  `id` bigint(20) NOT NULL,
+  `articulo` varchar(255) DEFAULT NULL,
+  `cantidad` int(11) DEFAULT NULL,
+  `codigo_taller` bigint(20) DEFAULT NULL,
+  `destino_retiro` varchar(255) DEFAULT NULL,
+  `fecha_retiro` datetime(6) DEFAULT NULL,
+  `id_inventario_original` bigint(20) DEFAULT NULL,
+  `justificacion_retiro` varchar(1000) DEFAULT NULL,
+  `nombre_donante` varchar(255) DEFAULT NULL,
+  `nombre_taller` varchar(255) DEFAULT NULL,
+  `retirado_por` varchar(255) DEFAULT NULL,
+  `rut_donante` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `retiro_inventario`
+--
+
+INSERT INTO `retiro_inventario` (`id`, `articulo`, `cantidad`, `codigo_taller`, `destino_retiro`, `fecha_retiro`, `id_inventario_original`, `justificacion_retiro`, `nombre_donante`, `nombre_taller`, `retirado_por`, `rut_donante`) VALUES
+(1, 'Hola', 1, 4, 'Prueba 4', '2026-07-02 18:03:26.000000', 8, 'Retirado para usarse en el taller', 'Gabriel Gonzalez', 'Prueba 4', 'Dr.Carolina', '12345678-5');
 
 -- --------------------------------------------------------
 
@@ -403,6 +446,13 @@ ALTER TABLE `comentario_taller`
   ADD KEY `FK6lavfkh0f8woovn6hhe28xpmi` (`taller_id`);
 
 --
+-- Indices de la tabla `dispositivo_notificacion`
+--
+ALTER TABLE `dispositivo_notificacion`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `token_fcm` (`token_fcm`) USING HASH;
+
+--
 -- Indices de la tabla `donacion_eliminada`
 --
 ALTER TABLE `donacion_eliminada`
@@ -437,6 +487,12 @@ ALTER TABLE `inventario`
 -- Indices de la tabla `reportes`
 --
 ALTER TABLE `reportes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `retiro_inventario`
+--
+ALTER TABLE `retiro_inventario`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -497,6 +553,12 @@ ALTER TABLE `comentario_taller`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT de la tabla `dispositivo_notificacion`
+--
+ALTER TABLE `dispositivo_notificacion`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `donacion_eliminada`
 --
 ALTER TABLE `donacion_eliminada`
@@ -506,7 +568,7 @@ ALTER TABLE `donacion_eliminada`
 -- AUTO_INCREMENT de la tabla `gestion_donacion`
 --
 ALTER TABLE `gestion_donacion`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `inscripcion_voluntario`
@@ -524,6 +586,12 @@ ALTER TABLE `inventario`
 -- AUTO_INCREMENT de la tabla `reportes`
 --
 ALTER TABLE `reportes`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `retiro_inventario`
+--
+ALTER TABLE `retiro_inventario`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --

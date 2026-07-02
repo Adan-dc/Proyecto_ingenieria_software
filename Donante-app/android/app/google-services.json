@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "709384615416",
+    "project_id": "donante-app-74cdb",
+    "storage_bucket": "donante-app-74cdb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:709384615416:android:df1da399a183350327d20d",
+        "android_client_info": {
+          "package_name": "com.proyecto.donante"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBelOLP-emuOCsKI5EwqFizZDWF8B7LNnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

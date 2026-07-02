@@ -92,11 +92,11 @@ export interface DonacionApk {
 export class GestionDonacionService {
 
   // APK / navegador: usa la IP actual de tu computador, no localhost en celular.
-  private apiGestionUrl = 'http://192.168.1.201:8083/api/v1/gestion';
+  private apiGestionUrl = 'http://192.168.1.229:8083/api/v1/gestion';
 
   // Backend admin talleres.
-  private apiTalleresUrl = 'http://192.168.1.201:8081/api/talleres';
-  private apiArticulosUrl = 'http://192.168.1.201:8081/api/articulos-requeridos';
+  private apiTalleresUrl = 'http://192.168.1.229:8081/api/talleres';
+  private apiArticulosUrl = 'http://192.168.1.229:8081/api/articulos-requeridos';
 
   constructor(private http: HttpClient) {}
 
